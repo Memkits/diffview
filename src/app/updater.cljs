@@ -7,4 +7,5 @@
     :write-old (assoc store :old-text op-data)
     :write-new (assoc store :new-text op-data)
     :hydrate-storage op-data
+    :toggle-sorted (update store :sorted? not)
     store))
