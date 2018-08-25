@@ -14,38 +14,62 @@
             ["diff" :as diff]
             [clojure.string :as string]))
 
+(defcomp
+ comp-checked
+ (checked? text handler)
+ (div
+  {:style (merge ui/row-center)}
+  (input
+   {:type "checkbox", :checked checked?, :on-click handler, :style {:cursor :pointer}})
+  (<> text {:font-family ui/font-fancy})))
+
 (def style-line
-  {:line-height "24px", :font-size 12, :font-family ui/font-code, :margin 0, :padding "0 8px"})
+  {:line-height "24px",
+   :font-size 12,
+   :font-family ui/font-code,
+   :margin 0,
+   :padding "0 8px",
+   :white-space :pre,
+   :overflow-x :auto})
 
 (defcomp
  comp-diff-view
  (changes)
- (div
-  {:style (merge ui/flex {:overflow :auto})}
-  (list->
-   {:style nil}
-   (->> changes
-        (map-indexed
-         (fn [idx chunk]
-           [idx
-            (cond
-              (:removed chunk)
-                (pre
-                 {:style (merge
-                          style-line
-                          {:background-color (hsl 0 100 88), :color :white}),
-                  :inner-text (:value chunk)})
-              (:added chunk)
-                (pre
-                 {:style (merge style-line {:background-color (hsl 200 100 94)}),
-                  :inner-text (:value chunk)})
-              :else
-                (pre
-                 {:style (merge style-line {:color (hsl 0 0 80)}),
-                  :inner-text (:value chunk)}))]))))
-  (=< nil 80)))
+ (list->
+  {:style (merge ui/flex {:padding-bottom 80, :overflow :auto})}
+  (->> changes
+       (map-indexed
+        (fn [idx chunk]
+          [idx
+           (cond
+             (:removed chunk)
+               (div
+                {:style (merge style-line {:background-color (hsl 0 100 88), :color :white}),
+                 :inner-text (:value chunk)})
+             (:added chunk)
+               (div
+                {:style (merge style-line {:background-color (hsl 200 100 94)}),
+                 :inner-text (:value chunk)})
+             :else
+               (div
+                {:style (merge style-line {:color (hsl 0 0 80)}),
+                 :inner-text (:value chunk)}))])))))
 
 (defcomp comp-divider () (div {:style {:width 1, :background-color (hsl 0 0 94)}}))
+
+(defcomp
+ comp-toolbar
+ (fullscreen? sorted?)
+ (div
+  {:style (merge
+           ui/row-parted
+           {:border-top (str "1px solid " (hsl 0 0 94)), :line-height "32px"})}
+  (span {})
+  (div
+   {:style (merge ui/row-center {:padding "0 8px"}), :on-click (fn [e] (println e))}
+   (comp-checked fullscreen? "Fullscreen" (fn [e d! m!] (d! :toggle-fullscreen nil)))
+   (=< 16 nil)
+   (comp-checked sorted? "Sorted" (fn [e d! m!] (d! :toggle-sorted nil))))))
 
 (defn sort-by-line [text] (->> text (string/split-lines) (sort) (string/join "\n")))
 
@@ -65,6 +89,7 @@
  (let [store (:store reel)
        states (:states store)
        sorted? (:sorted? store)
+       fullscreen? (:fullscreen? store)
        changes (js->clj
                 (if sorted?
                   (diff/diffLines
@@ -77,32 +102,24 @@
     {:style (merge ui/global ui/fullscreen ui/column)}
     (div
      {:style (merge ui/flex ui/row)}
-     (textarea
-      {:style (merge ui/flex ui/textarea style-text),
-       :value (:old-text store),
-       :placeholder "Old text",
-       :on-input (fn [e d! m!] (d! :write-old (:value e))),
-       :spell-check false})
-     (comp-divider)
-     (textarea
-      {:style (merge ui/flex ui/textarea style-text),
-       :value (:new-text store),
-       :placeholder "New text",
-       :on-input (fn [e d! m!] (d! :write-new (:value e))),
-       :spellcheck false})
+     (when (not fullscreen?)
+       (div
+        {:style (merge ui/row ui/flex)}
+        (textarea
+         {:style (merge ui/flex ui/textarea style-text),
+          :value (:old-text store),
+          :placeholder "Old text",
+          :on-input (fn [e d! m!] (d! :write-old (:value e))),
+          :spell-check false})
+        (comp-divider)
+        (textarea
+         {:style (merge ui/flex ui/textarea style-text),
+          :value (:new-text store),
+          :placeholder "New text",
+          :on-input (fn [e d! m!] (d! :write-new (:value e))),
+          :spellcheck false})))
      (comp-divider)
      (comp-diff-view changes))
-    (div
-     {:style (merge
-              ui/row-parted
-              {:border-top (str "1px solid " (hsl 0 0 94)), :line-height "32px"})}
-     (span {})
-     (div
-      {:style (merge ui/row-center {:padding "0 8px"}), :on-click (fn [e] (println e))}
-      (input
-       {:type "checkbox",
-        :checked sorted?,
-        :on-click (fn [e d! m!] (d! :toggle-sorted nil))})
-      (<> "Sorted" {:font-family ui/font-fancy})))
+    (comp-toolbar fullscreen? sorted?)
     (when dev? (cursor-> :reel comp-reel states reel {}))
-    (when dev? (comp-inspect "Store" store {})))))
+    (when dev? (comp-inspect "Store" store {:bottom 0})))))

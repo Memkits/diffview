@@ -8,4 +8,5 @@
     :write-new (assoc store :new-text op-data)
     :hydrate-storage op-data
     :toggle-sorted (update store :sorted? not)
+    :toggle-fullscreen (update store :fullscreen? not)
     store))

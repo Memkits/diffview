@@ -1,4 +1,4 @@
 
 (ns app.schema )
 
-(def store {:states {}, :sorted? false, :old-text "", :new-text ""})
+(def store {:states {}, :sorted? false, :fullscreen? false, :old-text "", :new-text ""})
