@@ -2,10 +2,9 @@
 (ns app.comp.container
   (:require [hsl.core :refer [hsl]]
             [respo-ui.core :as ui]
-            [respo.macros
+            [respo.core
              :refer
              [defcomp cursor-> list-> <> div button textarea pre span input]]
-            [verbosely.core :refer [verbosely!]]
             [respo.comp.space :refer [=<]]
             [respo.comp.inspect :refer [comp-inspect]]
             [reel.comp.reel :refer [comp-reel]]
@@ -101,7 +100,7 @@
    (div
     {:style (merge ui/global ui/fullscreen ui/column)}
     (div
-     {:style (merge ui/flex ui/row)}
+     {:style (merge ui/flex ui/row {:overflow :auto})}
      (when (not fullscreen?)
        (div
         {:style (merge ui/row ui/flex)}
