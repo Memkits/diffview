@@ -20,6 +20,6 @@
    :cdn-url "http://cdn.tiye.me/diffview/",
    :cdn-folder "tiye.me:cdn/diffview",
    :title "Diffview",
-   :icon "http://cdn.tiye.me/logo/mvc-works.png",
+   :icon "http://cdn.tiye.me/logo/diffview.png",
    :storage-key "diffview",
    :upload-folder "tiye.me:repo/Memkits/diffview/"})
