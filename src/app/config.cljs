@@ -18,8 +18,6 @@
   {:dev-ui "http://localhost:8100/main.css",
    :release-ui "http://cdn.tiye.me/favored-fonts/main.css",
    :cdn-url "http://cdn.tiye.me/diffview/",
-   :cdn-folder "tiye.me:cdn/diffview",
    :title "Diffview",
    :icon "http://cdn.tiye.me/logo/diffview.png",
-   :storage-key "diffview",
-   :upload-folder "tiye.me:repo/Memkits/diffview/"})
+   :storage-key "diffview"})

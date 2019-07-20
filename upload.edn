@@ -1,0 +1,6 @@
+
+{:host "tiye.me"
+ :uploads [{:from "dist/*"
+            :to "cdn/diffview/"}
+           {:from "dist/{index.html,manifest.json}"
+            :to "repo/Memkits/diffview/"}]}
