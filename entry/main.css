@@ -10,8 +10,8 @@ body * {
 }
 
 ::-webkit-scrollbar {
-  width: 2px;
-  height: 2px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -19,7 +19,7 @@ body * {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: hsla(200,100%,76%,0.8);
+  background-color: hsla(200,30%,80%,0.8);
 }
 
 ::-webkit-scrollbar-corner {
