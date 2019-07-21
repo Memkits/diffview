@@ -38,6 +38,10 @@
   (repeat! 60 persist-storage!)
   (let [raw (.getItem js/localStorage (:storage-key config/site))]
     (when (some? raw) (dispatch! :hydrate-storage (read-string raw))))
+  (js/window.addEventListener
+   "keydown"
+   (fn [event]
+     (when (and (.-metaKey event) (= "e" (.-key event))) (dispatch! :toggle-result nil))))
   (println "App started."))
 
 (defn reload! []
