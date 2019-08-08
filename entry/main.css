@@ -20,6 +20,7 @@ body * {
 
 ::-webkit-scrollbar-thumb {
   background-color: hsla(200,30%,80%,0.8);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-corner {
@@ -28,4 +29,11 @@ body * {
 
 ::-webkit-resizer{
   background-color:transparent;
+}
+
+textarea {
+  background-color: hsl(0,0%,96%);
+}
+textarea:hover {
+  background-color: hsl(0,0%,100%);
 }
