@@ -34,6 +34,6 @@ body * {
 textarea {
   background-color: hsl(0,0%,96%);
 }
-textarea:hover {
+textarea:focus {
   background-color: hsl(0,0%,100%);
 }
