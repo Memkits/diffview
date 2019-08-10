@@ -4,7 +4,7 @@
             [respo-ui.core :as ui]
             [respo.core
              :refer
-             [defcomp cursor-> list-> <> div button textarea pre span input]]
+             [defcomp cursor-> list-> <> div button textarea pre span input a]]
             [respo.comp.space :refer [=<]]
             [respo.comp.inspect :refer [comp-inspect]]
             [reel.comp.reel :refer [comp-reel]]
@@ -73,7 +73,13 @@
    {:style (merge ui/row-center)}
    (comp-checked show-result? "Result?(⌘ e)" (fn [e d! m!] (d! :toggle-result nil)))
    (=< 16 nil)
-   (comp-checked sorted? "Sorted" (fn [e d! m!] (d! :toggle-sorted nil))))))
+   (comp-checked sorted? "Sorted" (fn [e d! m!] (d! :toggle-sorted nil)))
+   (=< 16 nil)
+   (a
+    {:style ui/link,
+     :inner-text "Clear",
+     :title "⌘ k",
+     :on-click (fn [e d! m!] (d! :clear-text nil))}))))
 
 (defn sort-by-line [text] (->> text (string/split-lines) (sort) (string/join "\n")))
 
@@ -116,7 +122,8 @@
           :value (:old-text store),
           :placeholder "Old text",
           :on-input (fn [e d! m!] (d! :write-old (:value e))),
-          :spell-check false})
+          :spell-check false,
+          :autofocus true})
         (comp-divider)
         (textarea
          {:style (merge ui/flex ui/textarea style-text),

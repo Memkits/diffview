@@ -41,7 +41,9 @@
   (js/window.addEventListener
    "keydown"
    (fn [event]
-     (when (and (.-metaKey event) (= "e" (.-key event))) (dispatch! :toggle-result nil))))
+     (cond
+       (and (.-metaKey event) (= "e" (.-key event))) (dispatch! :toggle-result nil)
+       (and (.-metaKey event) (= "k" (.-key event))) (dispatch! :clear-text nil))))
   (println "App started."))
 
 (defn reload! []

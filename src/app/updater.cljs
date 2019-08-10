@@ -9,4 +9,6 @@
     :hydrate-storage op-data
     :toggle-sorted (update store :sorted? not)
     :toggle-result (update store :show-result? not)
+    :clear-text
+      (-> store (assoc :old-text "") (assoc :new-text "") (assoc :show-result? false))
     store))
