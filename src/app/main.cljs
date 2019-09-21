@@ -43,7 +43,8 @@
    (fn [event]
      (cond
        (and (.-metaKey event) (= "e" (.-key event))) (dispatch! :toggle-result nil)
-       (and (.-metaKey event) (= "k" (.-key event))) (dispatch! :clear-text nil))))
+       (and (.-metaKey event) (= "k" (.-key event))) (dispatch! :clear-text nil)
+       (and (.-metaKey event) (= "i" (.-key event))) (dispatch! :swap-text nil))))
   (println "App started."))
 
 (defn reload! []
