@@ -77,6 +77,12 @@
    (=< 16 nil)
    (a
     {:style ui/link,
+     :inner-text "Swap",
+     :title "⌘ i",
+     :on-click (fn [e d! m!] (d! :swap-text nil))})
+   (=< 16 nil)
+   (a
+    {:style ui/link,
      :inner-text "Clear",
      :title "⌘ k",
      :on-click (fn [e d! m!] (d! :clear-text nil))}))))

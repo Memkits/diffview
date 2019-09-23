@@ -11,4 +11,6 @@
     :toggle-result (update store :show-result? not)
     :clear-text
       (-> store (assoc :old-text "") (assoc :new-text "") (assoc :show-result? false))
+    :swap-text
+      (-> store (assoc :old-text (:new-text store)) (assoc :new-text (:old-text store)))
     store))

@@ -3,7 +3,7 @@
  :cache-blockers #{cumulo-util.build}
  :dependencies [[mvc-works/hsl          "0.1.2"]
                 [mvc-works/shell-page   "0.1.10"]
-                [respo                  "0.10.11"]
+                [respo                  "0.10.12"]
                 [respo/ui               "0.3.13"]
                 [respo/alerts           "0.3.13"]
                 [respo/feather          "0.1.1"]
@@ -21,7 +21,8 @@
                    :output-dir "target/"
                    :asset-path "./"
                    :modules {:client {:init-fn app.main/main!}}
-                   :devtools {:after-load app.main/reload!}
+                   :devtools {:after-load app.main/reload!
+                              :loader-mode :script}
                    :compiler-options {:infer-externs :auto}
                    :release {:output-dir "dist/"
                              :module-hash-names 8
