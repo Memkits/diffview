@@ -42,7 +42,7 @@
                         :value $ :old-text store
                         :placeholder "\"Old text"
                         :on-input $ fn (e d!)
-                          d! :write-old $ :value e
+                          d! $ :: :write-old (:value e)
                         :spell-check false
                         :autofocus true
                       comp-divider
@@ -51,7 +51,7 @@
                         :value $ :new-text store
                         :placeholder "\"New text"
                         :on-input $ fn (e d!)
-                          d! :write-new $ :value e
+                          d! $ :: :write-new (:value e)
                         :spellcheck false
                 when dev? $ comp-reel (>> states :reel) reel ({})
                 when dev? $ comp-inspect "\"Store" store
@@ -104,15 +104,19 @@
                 :font-family ui/font-fancy
               div
                 {} $ :style (merge ui/row-center)
-                comp-checked show-result? "\"Result?(⌘ e)" $ fn (e d!) (d! :toggle-result nil)
+                comp-checked show-result? "\"Result?(⌘ e)" $ fn (e d!)
+                  d! $ :: :toggle-result
                 =< 16 nil
-                comp-checked sorted? "\"Sorted" $ fn (e d!) (d! :toggle-sorted nil)
+                comp-checked sorted? "\"Sorted" $ fn (e d!)
+                  d! $ :: :toggle-sorted
                 =< 16 nil
                 a $ {} (:style ui/link) (:inner-text "\"Swap") (:title "\"⌘ i")
-                  :on-click $ fn (e d!) (d! :swap-text nil)
+                  :on-click $ fn (e d!)
+                    d! $ :: :swap-text
                 =< 16 nil
                 a $ {} (:style ui/link) (:inner-text "\"Clear") (:title "\"⌘ k")
-                  :on-click $ fn (e d!) (d! :clear-text nil)
+                  :on-click $ fn (e d!)
+                    d! $ :: :clear-text
         |sort-by-line $ quote
           defn sort-by-line (text)
             -> text (.split-lines) (.sort-by identity) (.join-str &newline)
@@ -155,9 +159,9 @@
         |*reel $ quote
           defatom *reel $ -> reel-schema/reel (assoc :base schema/store) (assoc :store schema/store)
         |dispatch! $ quote
-          defn dispatch! (op op-data)
+          defn dispatch! (op)
             when config/dev? $ println "\"Dispatch:" op
-            reset! *reel $ reel-updater updater @*reel op op-data
+            reset! *reel $ reel-updater updater @*reel op
         |main! $ quote
           defn main! ()
             if config/dev? $ load-console-formatter!
@@ -170,16 +174,16 @@
             let
                 raw $ js/localStorage.getItem (:storage-key config/site)
               when (some? raw)
-                dispatch! :hydrate-storage $ parse-cirru-edn raw
+                dispatch! $ :: :hydrate-storage (parse-cirru-edn raw)
             js/window.addEventListener "\"keydown" $ fn (event)
               cond
                   and (.-metaKey event)
                     = "\"e" $ .-key event
-                  dispatch! :toggle-result nil
+                  dispatch! $ :: :toggle-result
                 (and (.-metaKey event) (= "\"k" (.-key event)))
-                  dispatch! :clear-text nil
+                  dispatch! $ :: :clear-text
                 (and (.-metaKey event) (= "\"i" (.-key event)))
-                  dispatch! :swap-text nil
+                  dispatch! $ :: :swap-text
             println "|App started."
         |mount-target $ quote
           def mount-target $ .querySelector js/document |.app
@@ -229,19 +233,22 @@
     |app.updater $ {}
       :defs $ {}
         |updater $ quote
-          defn updater (store op op-data op-id op-time)
-            case-default op
-              do (println "\"Unkown op:" op) store
-              :states $ update-states store op-data
-              :write-old $ assoc store :old-text op-data
-              :write-new $ assoc store :new-text op-data
-              :hydrate-storage op-data
-              :toggle-sorted $ update store :sorted? not
-              :toggle-result $ update store :show-result? not
-              :clear-text $ -> store (assoc :old-text "\"") (assoc :new-text "\"") (assoc :show-result? false)
-              :swap-text $ -> store
-                assoc :old-text $ :new-text store
-                assoc :new-text $ :old-text store
+          defn updater (store op op-id op-time)
+            tag-match op
+                :states cursor s
+                update-states store cursor s
+              (:write-old d) (assoc store :old-text d)
+              (:write-new d) (assoc store :new-text d)
+              (:hydrate-storage d) d
+              (:toggle-sorted) (update store :sorted? not)
+              (:toggle-result) (update store :show-result? not)
+              (:clear-text)
+                -> store (assoc :old-text "\"") (assoc :new-text "\"") (assoc :show-result? false)
+              (:swap-text)
+                -> store
+                  assoc :old-text $ :new-text store
+                  assoc :new-text $ :old-text store
+              _ $ do (eprintln "\"Unkown op:" op) store
       :ns $ quote
         ns app.updater $ :require
           [] respo.cursor :refer $ [] update-states
