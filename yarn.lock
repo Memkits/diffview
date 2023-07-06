@@ -2,19 +2,19 @@
 # yarn lockfile v1
 
 
-"@calcit/procs@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.npmmirror.com/@calcit/procs/-/procs-0.7.0.tgz#09a66c814c849beb9403e1f63ec24fbd655c1430"
-  integrity sha512-Q+K1cWxm/F58jEOYVNy7HbMFqtiF0+tdUsamLJrNaUUU5/gNymfI9WvgiWYBp7/KiWm8gsPximu9zIkcrW4pwQ==
+"@calcit/procs@^0.7.5":
+  version "0.7.5"
+  resolved "https://registry.npmmirror.com/@calcit/procs/-/procs-0.7.5.tgz#8d50a28fc25a1b5cfa67e4b94c98a155e25437d3"
+  integrity sha512-E7syp1pOQYBeJpDoap2iYCC9FVv85MBH1F+RJIj2zpj+rYhfqcAhrs1jjaMdBJyfCQVDIy1pvLfTSWix36dh9Q==
   dependencies:
-    "@calcit/ternary-tree" "0.0.19"
+    "@calcit/ternary-tree" "0.0.20"
     "@cirru/parser.ts" "^0.0.6"
     "@cirru/writer.ts" "^0.1.3"
 
-"@calcit/ternary-tree@0.0.19":
-  version "0.0.19"
-  resolved "https://registry.npmmirror.com/@calcit/ternary-tree/-/ternary-tree-0.0.19.tgz#b5b33a3d07a9e603feeef7cd642958c83628122f"
-  integrity sha512-dn2kNlcOQOPtCAeE68MHcRgrZzRP+jNKBmDW2wO0S8HTUA2SeAbpzZoK0HfcTHFmlGl6yKpjZ95rICQ319AjcA==
+"@calcit/ternary-tree@0.0.20":
+  version "0.0.20"
+  resolved "https://registry.npmmirror.com/@calcit/ternary-tree/-/ternary-tree-0.0.20.tgz#db1947702af88e51af45d29c5616d6ac8b968c6c"
+  integrity sha512-K2GGK9jxuP/TsphUMdDqmxexS5OfS8xu+k0PymIyUJ4qdBW+7EMwUQQM2RtZpWB6m0JvxeWSsZ6mwpdu9SaFbQ==
 
 "@cirru/parser.ts@^0.0.6":
   version "0.0.6"
@@ -278,9 +278,9 @@ process@^0.11.10:
   integrity sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==
 
 rollup@^3.21.0:
-  version "3.25.1"
-  resolved "https://registry.npmmirror.com/rollup/-/rollup-3.25.1.tgz#9fff79d22ff1a904b2b595a2fb9bc3793cb987d8"
-  integrity sha512-tywOR+rwIt5m2ZAWSe5AIJcTat8vGlnPFAv15ycCrw33t6iFsXZ6mzHVFh2psSjxQPmI+xgzMZZizUAukBI4aQ==
+  version "3.26.1"
+  resolved "https://registry.npmmirror.com/rollup/-/rollup-3.26.1.tgz#b375bf4b3cbb35bdca717e3cee2413894c469397"
+  integrity sha512-I5gJCSpSMr3U9wv4D5YA8g7w7cj3eaSDeo7t+JcaFQOmoOUBgu4K9iMp8k3EZnwbJrjQxUMSKxMyB8qEQzzaSg==
   optionalDependencies:
     fsevents "~2.3.2"
 
