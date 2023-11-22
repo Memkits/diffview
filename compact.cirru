@@ -10,12 +10,11 @@
           :code $ quote
             defcomp comp-checked (checked? text handler)
               div
-                {}
-                  :style $ merge ui/row-center
-                    {} $ :cursor :pointer
+                {} (:class-name css/row-center)
+                  :style $ {} (:cursor :pointer)
                   :on-click handler
                 input $ {} (:type "\"checkbox") (:checked checked?) (:cursor :pointer)
-                <> text $ {} (:font-family ui/font-fancy)
+                <> text css/font-fancy
         |comp-container $ %{} :CodeEntry (:doc |)
           :code $ quote
             defcomp comp-container (reel)
@@ -31,16 +30,17 @@
                         sort-by-line $ :new-text store
                       diff/diffLines (:old-text store) (:new-text store)
                 div
-                  {} $ :style (merge ui/global ui/fullscreen ui/column)
+                  {} $ :class-name (str-spaced css/global css/fullscreen css/column)
                   comp-toolbar show-result? sorted?
                   div
-                    {} $ :style
-                      merge ui/flex ui/row $ {} (:overflow :auto)
+                    {}
+                      :class-name $ str-spaced css/flex css/row
+                      :style $ {} (:overflow :auto)
                     if show-result? (comp-diff-view changes)
                       div
-                        {} $ :style (merge ui/expand ui/row ui/flex)
+                        {} $ :class-name (str-spaced css/expand css/row css/flex)
                         textarea $ {}
-                          :style $ merge ui/textarea ui/expand style-text
+                          :class-name $ str-spaced css/textarea css/expand style-text
                           :value $ :old-text store
                           :placeholder "\"Old text"
                           :on-input $ fn (e d!)
@@ -49,7 +49,7 @@
                           :autofocus true
                         comp-divider
                         textarea $ {}
-                          :style $ merge ui/textarea ui/expand style-text
+                          :class-name $ str-spaced css/textarea css/expand style-text
                           :value $ :new-text store
                           :placeholder "\"New text"
                           :on-input $ fn (e d!)
@@ -62,31 +62,29 @@
           :code $ quote
             defcomp comp-diff-view (changes)
               list->
-                {} $ :style
-                  merge ui/flex $ {} (:padding-bottom 80) (:overflow :auto)
+                {} (:class-name css/flex)
+                  :style $ {} (:padding-bottom 80) (:overflow :auto)
                 -> changes $ map-indexed
                   fn (idx chunk)
                     [] idx $ cond
                         :removed chunk
-                        div $ {}
-                          :style $ merge style-line
-                            {}
-                              :background-color $ hsl 0 100 78
-                              :color :white
+                        div $ {} (:class-name style-line)
+                          :style $ {}
+                            :background-color $ hsl 0 100 78
+                            :color :white
                           :inner-text $ :value chunk
                           :title $ str "\"Removed " (:count chunk) "\" lines"
                       (:added chunk)
-                        div $ {}
-                          :style $ merge style-line
-                            {} $ :background-color (hsl 200 100 92)
+                        div $ {} (:class-name style-line)
+                          :style $ {}
+                            :background-color $ hsl 200 100 92
                           :inner-text $ :value chunk
                           :title $ str "\"Added " (:count chunk) "\" lines"
                       :else $ div
-                        {}
-                          :style $ merge style-line
-                            {}
-                              :color $ hsl 0 0 80
-                              :line-height "\"15px"
+                        {} (:class-name style-line)
+                          :style $ {}
+                            :color $ hsl 0 0 80
+                            :line-height "\"15px"
                           :inner-text $ :value chunk
                           :title $ str (:count chunk) "\" lines reversed"
         |comp-divider $ %{} :CodeEntry (:doc |)
@@ -99,27 +97,23 @@
           :code $ quote
             defcomp comp-toolbar (show-result? sorted?)
               div
-                {} $ :style
-                  merge ui/row-parted $ {}
-                    :border-bottom $ str "\"1px solid " (hsl 0 0 90)
-                    :line-height "\"32px"
-                    :padding "\"0 8px"
+                {} $ :class-name (str-spaced css/row-parted style-toolbar)
                 <> "\"Diff View" $ {}
                   :color $ hsl 0 0 40
                   :font-family ui/font-fancy
                 div
-                  {} $ :style (merge ui/row-center)
+                  {} $ :class-name (merge css/row-center)
                   comp-checked show-result? "\"Result?(⌘ e)" $ fn (e d!)
                     d! $ :: :toggle-result
                   =< 16 nil
                   comp-checked sorted? "\"Sorted" $ fn (e d!)
                     d! $ :: :toggle-sorted
                   =< 16 nil
-                  a $ {} (:style ui/link) (:inner-text "\"Swap") (:title "\"⌘ i")
+                  a $ {} (:class-name css/link) (:inner-text "\"Swap") (:title "\"⌘ i")
                     :on-click $ fn (e d!)
                       d! $ :: :swap-text
                   =< 16 nil
-                  a $ {} (:style ui/link) (:inner-text "\"Clear") (:title "\"⌘ k")
+                  a $ {} (:class-name css/link) (:inner-text "\"Clear") (:title "\"⌘ k")
                     :on-click $ fn (e d!)
                       d! $ :: :clear-text
         |sort-by-line $ %{} :CodeEntry (:doc |)
@@ -128,10 +122,19 @@
               -> text (.split-lines) (.sort-by identity) (.join-str &newline)
         |style-line $ %{} :CodeEntry (:doc |)
           :code $ quote
-            def style-line $ {} (:line-height "\"24px") (:font-size 12) (:font-family ui/font-code) (:margin 0) (:padding "\"0 8px") (:white-space :pre) (:overflow-x :auto)
+            defstyle style-line $ {}
+              "\"&" $ {} (:line-height "\"24px") (:font-size 12) (:font-family ui/font-code) (:margin 0) (:padding "\"0 8px") (:white-space :pre) (:overflow-x :auto)
         |style-text $ %{} :CodeEntry (:doc |)
           :code $ quote
-            def style-text $ {} (:font-family ui/font-code) (:line-height "\"24px") (:font-size 12) (:white-space :pre) (:overflow :auto) (:border :none) (:padding "\"8px 8px 80px 8px") (:resize :none)
+            defstyle style-text $ {}
+              "\"&" $ {} (:font-family ui/font-code) (:line-height "\"24px") (:font-size 12) (:white-space :pre) (:overflow :auto) (:border :none) (:padding "\"8px 8px 80px 8px") (:resize :none)
+        |style-toolbar $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstyle style-toolbar $ {}
+              "\"&" $ {}
+                :border-bottom $ str "\"1px solid " (hsl 0 0 90)
+                :line-height "\"32px"
+                :padding "\"0 8px"
         |tagging-data $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn tagging-data (xs)
@@ -143,6 +146,8 @@
         :code $ quote
           ns app.comp.container $ :require
             respo-ui.core :refer $ hsl
+            respo.css :refer $ defstyle
+            respo-ui.css :as css
             respo-ui.core :as ui
             respo.core :refer $ defcomp >> list-> <> div button textarea pre span input a
             respo.comp.space :refer $ =<
@@ -179,7 +184,7 @@
               render-app!
               add-watch *reel :changes $ fn (r p) (render-app!)
               listen-devtools! |a dispatch!
-              .addEventListener js/window |beforeunload persist-storage!
+              js/window.addEventListener |beforeunload persist-storage!
               repeat! 60 persist-storage!
               let
                   raw $ js/localStorage.getItem (:storage-key config/site)
@@ -197,7 +202,7 @@
               println "|App started."
         |mount-target $ %{} :CodeEntry (:doc |)
           :code $ quote
-            def mount-target $ .querySelector js/document |.app
+            def mount-target $ js/document.querySelector |.app
         |persist-storage! $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn persist-storage! (? e)
