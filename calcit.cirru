@@ -857,7 +857,7 @@
                           |r $ %{} :Expr (:at 1534785403620) (:by |rJG4IHzWf)
                             :data $ {}
                               |T $ %{} :Leaf (:at 1534785406534) (:by |rJG4IHzWf) (:text |:line-height)
-                              |j $ %{} :Leaf (:at 1534785501457) (:by |rJG4IHzWf) (:text "|\"24px")
+                              |j $ %{} :Leaf (:at 1705477049521) (:by |rJG4IHzWf) (:text "|\"20px")
                           |t $ %{} :Expr (:at 1534822510094) (:by |rJG4IHzWf)
                             :data $ {}
                               |T $ %{} :Leaf (:at 1534822513161) (:by |rJG4IHzWf) (:text |:font-size)

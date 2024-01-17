@@ -127,7 +127,7 @@
         |style-text $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle style-text $ {}
-              "\"&" $ {} (:font-family ui/font-code) (:line-height "\"24px") (:font-size 12) (:white-space :pre) (:overflow :auto) (:border :none) (:padding "\"8px 8px 80px 8px") (:resize :none)
+              "\"&" $ {} (:font-family ui/font-code) (:line-height "\"20px") (:font-size 12) (:white-space :pre) (:overflow :auto) (:border :none) (:padding "\"8px 8px 80px 8px") (:resize :none)
         |style-toolbar $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle style-toolbar $ {}
