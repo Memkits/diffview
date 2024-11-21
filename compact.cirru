@@ -13,7 +13,8 @@
                 {} (:class-name css/row-center)
                   :style $ {} (:cursor :pointer)
                   :on-click handler
-                input $ {} (:type "\"checkbox") (:checked checked?) (:cursor :pointer)
+                input $ {} (:type "\"checkbox") (:checked checked?)
+                  :style $ {} (:cursor :pointer)
                 <> text css/font-fancy
         |comp-container $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -23,20 +24,22 @@
                   states $ :states store
                   sorted? $ :sorted? store
                   show-result? $ :show-result? store
+                  by-word? $ w-js-log (:by-word? store)
+                  differ $ if by-word? diff/diffWords diff/diffLines
                   changes $ tagging-data
                     to-calcit-data $ if sorted?
-                      diff/diffLines
+                      differ
                         sort-by-line $ :old-text store
                         sort-by-line $ :new-text store
-                      diff/diffLines (:old-text store) (:new-text store)
+                      differ (:old-text store) (:new-text store)
                 div
                   {} $ :class-name (str-spaced css/global css/fullscreen css/column)
-                  comp-toolbar show-result? sorted?
+                  comp-toolbar show-result? sorted? by-word?
                   div
                     {}
                       :class-name $ str-spaced css/flex css/row
                       :style $ {} (:overflow :auto)
-                    if show-result? (comp-diff-view changes)
+                    if show-result? (comp-diff-view changes by-word?)
                       div
                         {} $ :class-name (str-spaced css/expand css/row css/flex)
                         textarea $ {}
@@ -60,33 +63,28 @@
                     {} $ :bottom 0
         |comp-diff-view $ %{} :CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-diff-view (changes)
+            defcomp comp-diff-view (changes by-word?)
               list->
                 {} (:class-name css/flex)
                   :style $ {} (:padding-bottom 80) (:overflow :auto)
+                    :line-height $ if by-word? "\"20px"
                 -> changes $ map-indexed
                   fn (idx chunk)
-                    [] idx $ cond
-                        :removed chunk
-                        div $ {} (:class-name style-line)
-                          :style $ {}
-                            :background-color $ hsl 0 100 78
-                            :color :white
-                          :inner-text $ :value chunk
-                          :title $ str "\"Removed " (:count chunk) "\" lines"
-                      (:added chunk)
-                        div $ {} (:class-name style-line)
-                          :style $ {}
-                            :background-color $ hsl 200 100 92
-                          :inner-text $ :value chunk
-                          :title $ str "\"Added " (:count chunk) "\" lines"
-                      :else $ div
-                        {} (:class-name style-line)
-                          :style $ {}
-                            :color $ hsl 0 0 80
-                            :line-height "\"15px"
-                          :inner-text $ :value chunk
-                          :title $ str (:count chunk) "\" lines reversed"
+                    [] idx $ let
+                        tok $ :value chunk
+                      cond
+                          :removed chunk
+                          div $ {} (:inner-text tok)
+                            :class-name $ str-spaced style-line style-removed (if by-word? style-word-mode)
+                            :title $ str "\"Removed " (:count chunk) "\" chunks"
+                        (:added chunk)
+                          div $ {} (:inner-text tok)
+                            :class-name $ str-spaced style-line style-added (if by-word? style-word-mode)
+                            :title $ str "\"Added " (:count chunk) "\" chunks"
+                        true $ div
+                          {} (:inner-text tok)
+                            :class-name $ str-spaced style-line style-no-change (if by-word? style-word-mode)
+                            ; :title $ str (:count chunk) "\" chunks reversed"
         |comp-divider $ %{} :CodeEntry (:doc |)
           :code $ quote
             defcomp comp-divider () $ div
@@ -95,7 +93,7 @@
                   :background-color $ hsl 0 0 94
         |comp-toolbar $ %{} :CodeEntry (:doc |)
           :code $ quote
-            defcomp comp-toolbar (show-result? sorted?)
+            defcomp comp-toolbar (show-result? sorted? by-word?)
               div
                 {} $ :class-name (str-spaced css/row-parted style-toolbar)
                 <> "\"Diff View" $ {}
@@ -109,6 +107,9 @@
                   comp-checked sorted? "\"Sorted" $ fn (e d!)
                     d! $ :: :toggle-sorted
                   =< 16 nil
+                  comp-checked by-word? "\"ByWord" $ fn (e d!)
+                    d! $ :: :toggle-word
+                  =< 16 nil
                   a $ {} (:class-name css/link) (:inner-text "\"Swap") (:title "\"⌘ i")
                     :on-click $ fn (e d!)
                       d! $ :: :swap-text
@@ -120,10 +121,27 @@
           :code $ quote
             defn sort-by-line (text)
               -> text (.split-lines) (.sort-by identity) (.join-str &newline)
+        |style-added $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstyle style-added $ {}
+              "\"&" $ {}
+                :background-color $ hsl 200 100 92
         |style-line $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle style-line $ {}
               "\"&" $ {} (:line-height "\"24px") (:font-size 12) (:font-family ui/font-code) (:margin 0) (:padding "\"0 8px") (:white-space :pre) (:overflow-x :auto)
+        |style-no-change $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstyle style-no-change $ {}
+              "\"&" $ {}
+                :color $ hsl 0 0 80
+                :line-height "\"15px"
+        |style-removed $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstyle style-removed $ {}
+              "\"&" $ {}
+                :background-color $ hsl 0 100 78
+                :color :white
         |style-text $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle style-text $ {}
@@ -135,6 +153,10 @@
                 :border-bottom $ str "\"1px solid " (hsl 0 0 90)
                 :line-height "\"32px"
                 :padding "\"0 8px"
+        |style-word-mode $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstyle style-word-mode $ {}
+              "\"&" $ {} (:display :inline) (:white-space :pre-wrap)
         |tagging-data $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn tagging-data (xs)
@@ -174,7 +196,7 @@
         |dispatch! $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn dispatch! (op)
-              when config/dev? $ println "\"Dispatch:" op
+              when config/dev? $ js/console.log "\"Dispatch:" op
               reset! *reel $ reel-updater updater @*reel op
         |main! $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -249,6 +271,7 @@
               :page :editor
               :sorted? false
               :show-result? false
+              :by-word? false
               :old-text "\""
               :new-text "\""
       :ns $ %{} :CodeEntry (:doc |)
@@ -266,6 +289,11 @@
                 (:hydrate-storage d) d
                 (:toggle-sorted) (update store :sorted? not)
                 (:toggle-result) (update store :show-result? not)
+                (:toggle-word)
+                  if
+                    nil? $ :by-word? store
+                    assoc store :by-word? true
+                    update store :by-word? not
                 (:clear-text)
                   -> store (assoc :old-text "\"") (assoc :new-text "\"") (assoc :show-result? false)
                 (:swap-text)
