@@ -24,7 +24,7 @@
                   states $ :states store
                   sorted? $ :sorted? store
                   show-result? $ :show-result? store
-                  by-word? $ w-js-log (:by-word? store)
+                  by-word? $ :by-word? store
                   differ $ if by-word? diff/diffWords diff/diffLines
                   changes $ tagging-data
                     to-calcit-data $ if sorted?

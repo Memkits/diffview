@@ -113,13 +113,10 @@
                       |q $ %{} :Expr (:at 1535106144225) (:by |rJG4IHzWf)
                         :data $ {}
                           |T $ %{} :Leaf (:at 1732210122440) (:by |rJG4IHzWf) (:text |by-word?)
-                          |j $ %{} :Expr (:at 1732210381143) (:by |rJG4IHzWf)
+                          |j $ %{} :Expr (:at 1535106149181) (:by |rJG4IHzWf)
                             :data $ {}
-                              |D $ %{} :Leaf (:at 1732210382629) (:by |rJG4IHzWf) (:text |w-js-log)
-                              |T $ %{} :Expr (:at 1535106149181) (:by |rJG4IHzWf)
-                                :data $ {}
-                                  |T $ %{} :Leaf (:at 1732210126982) (:by |rJG4IHzWf) (:text |:by-word?)
-                                  |j $ %{} :Leaf (:at 1535106151051) (:by |rJG4IHzWf) (:text |store)
+                              |T $ %{} :Leaf (:at 1732210126982) (:by |rJG4IHzWf) (:text |:by-word?)
+                              |j $ %{} :Leaf (:at 1535106151051) (:by |rJG4IHzWf) (:text |store)
                       |qT $ %{} :Expr (:at 1732210305564) (:by |rJG4IHzWf)
                         :data $ {}
                           |T $ %{} :Leaf (:at 1732210307844) (:by |rJG4IHzWf) (:text |differ)
