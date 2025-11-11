@@ -16,6 +16,7 @@
                 input $ {} (:type "\"checkbox") (:checked checked?)
                   :style $ {} (:cursor :pointer)
                 <> text css/font-fancy
+          :examples $ []
         |comp-container $ %{} :CodeEntry (:doc |)
           :code $ quote
             defcomp comp-container (reel)
@@ -61,6 +62,7 @@
                   when dev? $ comp-reel (>> states :reel) reel ({})
                   when dev? $ comp-inspect "\"Store" store
                     {} $ :bottom 0
+          :examples $ []
         |comp-diff-view $ %{} :CodeEntry (:doc |)
           :code $ quote
             defcomp comp-diff-view (changes by-word?)
@@ -85,12 +87,14 @@
                           {} (:inner-text tok)
                             :class-name $ str-spaced style-line style-no-change (if by-word? style-word-mode)
                             ; :title $ str (:count chunk) "\" chunks reversed"
+          :examples $ []
         |comp-divider $ %{} :CodeEntry (:doc |)
           :code $ quote
             defcomp comp-divider () $ div
               {} $ :style
                 {} (:width 1)
                   :background-color $ hsl 0 0 94
+          :examples $ []
         |comp-toolbar $ %{} :CodeEntry (:doc |)
           :code $ quote
             defcomp comp-toolbar (show-result? sorted? by-word?)
@@ -117,35 +121,42 @@
                   a $ {} (:class-name css/link) (:inner-text "\"Clear") (:title "\"⌘ k")
                     :on-click $ fn (e d!)
                       d! $ :: :clear-text
+          :examples $ []
         |sort-by-line $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn sort-by-line (text)
               -> text (.split-lines) (.sort-by identity) (.join-str &newline)
+          :examples $ []
         |style-added $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle style-added $ {}
               "\"&" $ {}
                 :background-color $ hsl 200 100 92
+          :examples $ []
         |style-line $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle style-line $ {}
               "\"&" $ {} (:line-height "\"24px") (:font-size 12) (:font-family ui/font-code) (:margin 0) (:padding "\"0 8px") (:white-space :pre) (:overflow-x :auto)
+          :examples $ []
         |style-no-change $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle style-no-change $ {}
               "\"&" $ {}
                 :color $ hsl 0 0 80
                 :line-height "\"15px"
+          :examples $ []
         |style-removed $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle style-removed $ {}
               "\"&" $ {}
                 :background-color $ hsl 0 100 78
                 :color :white
+          :examples $ []
         |style-text $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle style-text $ {}
               "\"&" $ {} (:font-family ui/font-code) (:line-height "\"20px") (:font-size 12) (:white-space :pre) (:overflow :auto) (:border :none) (:padding "\"8px 8px 80px 8px") (:resize :none)
+          :examples $ []
         |style-toolbar $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle style-toolbar $ {}
@@ -153,10 +164,12 @@
                 :border-bottom $ str "\"1px solid " (hsl 0 0 90)
                 :line-height "\"32px"
                 :padding "\"0 8px"
+          :examples $ []
         |style-word-mode $ %{} :CodeEntry (:doc |)
           :code $ quote
             defstyle style-word-mode $ {}
               "\"&" $ {} (:display :inline) (:white-space :pre-wrap)
+          :examples $ []
         |tagging-data $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn tagging-data (xs)
@@ -164,6 +177,7 @@
                 map-kv xs $ fn (k v)
                   [] (turn-tag k) v
                 if (list? xs) (map xs tagging-data) xs
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns app.comp.container $ :require
@@ -183,9 +197,11 @@
         |dev? $ %{} :CodeEntry (:doc |)
           :code $ quote
             def dev? $ = "\"dev" (get-env "\"mode")
+          :examples $ []
         |site $ %{} :CodeEntry (:doc |)
           :code $ quote
             def site $ {} (:title "\"Diffview") (:storage-key "\"diffview")
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote (ns app.config)
     |app.main $ %{} :FileEntry
@@ -193,11 +209,13 @@
         |*reel $ %{} :CodeEntry (:doc |)
           :code $ quote
             defatom *reel $ -> reel-schema/reel (assoc :base schema/store) (assoc :store schema/store)
+          :examples $ []
         |dispatch! $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn dispatch! (op)
               when config/dev? $ js/console.log "\"Dispatch:" op
               reset! *reel $ reel-updater updater @*reel op
+          :examples $ []
         |main! $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn main! ()
@@ -222,14 +240,17 @@
                   (and (.-metaKey event) (= "\"i" (.-key event)))
                     dispatch! $ :: :swap-text
               println "|App started."
+          :examples $ []
         |mount-target $ %{} :CodeEntry (:doc |)
           :code $ quote
             def mount-target $ js/document.querySelector |.app
+          :examples $ []
         |persist-storage! $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn persist-storage! (? e)
               js/localStorage.setItem (:storage-key config/site)
                 format-cirru-edn $ :store @*reel
+          :examples $ []
         |reload! $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn reload! () $ if (nil? build-errors)
@@ -238,9 +259,11 @@
                 reset! *reel $ refresh-reel @*reel schema/store updater
                 hud! "\"ok~" "\"Ok"
               hud! "\"error" build-errors
+          :examples $ []
         |render-app! $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn render-app! () $ render! mount-target (comp-container @*reel) dispatch!
+          :examples $ []
         |repeat! $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn repeat! (duration cb)
@@ -248,6 +271,7 @@
                 fn () (cb)
                   repeat! (* 1000 duration) cb
                 * 1000 duration
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns app.main $ :require
@@ -274,6 +298,7 @@
               :by-word? false
               :old-text "\""
               :new-text "\""
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote (ns app.schema)
     |app.updater $ %{} :FileEntry
@@ -301,6 +326,7 @@
                     assoc :old-text $ :new-text store
                     assoc :new-text $ :old-text store
                 _ $ do (eprintln "\"Unkown op:" op) store
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns app.updater $ :require
