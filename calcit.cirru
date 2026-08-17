@@ -23,7 +23,7 @@
           :code $ quote
             defcomp comp-container (reel)
               let
-                  store $ :store reel
+                  store $ unsafe-coerce (reel-schema/read-field reel :store) 'app.schema/StoreData
                   states $ :states store
                   sorted? $ :sorted? store
                   show-result? $ :show-result? store
@@ -50,7 +50,8 @@
                           :value $ :old-text store
                           :placeholder "|Old text"
                           :on-input $ fn (e d!)
-                            d! $ :: :write-old (:value e)
+                            d! $ :: :write-old
+                              option:unwrap-or (get e :value) |
                           :spell-check false
                           :autofocus true
                         comp-divider
@@ -59,13 +60,17 @@
                           :value $ :new-text store
                           :placeholder "|New text"
                           :on-input $ fn (e d!)
-                            d! $ :: :write-new (:value e)
+                            d! $ :: :write-new
+                              option:unwrap-or (get e :value) |
                           :spellcheck false
                   when dev? $ comp-reel (>> states :reel) reel ({})
                   when dev? $ comp-inspect |Store store
                     {} $ :bottom 0
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Component)
+              :args $ [] 'Dynamic
+              :features $ #{} :js-ffi
         |comp-diff-view $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-diff-view (changes by-word?)
@@ -76,22 +81,28 @@
                 -> changes $ map-indexed
                   fn (idx chunk)
                     [] idx $ let
-                        tok $ :value chunk
+                        tok $ option:unwrap-or (get chunk :value) |
                       cond
-                          :removed chunk
+                          option:some? $ get chunk :removed
                           div $ {} (:inner-text tok)
                             :class-name $ str-spaced style-line style-removed (if by-word? style-word-mode)
-                            :title $ str "|Removed " (:count chunk) "| chunks"
-                        (:added chunk)
+                            :title $ str "|Removed "
+                              option:unwrap-or (get chunk :count) 0
+                              , "| chunks"
+                        (option:some? (get chunk :added))
                           div $ {} (:inner-text tok)
                             :class-name $ str-spaced style-line style-added (if by-word? style-word-mode)
-                            :title $ str "|Added " (:count chunk) "| chunks"
+                            :title $ str "|Added "
+                              option:unwrap-or (get chunk :count) 0
+                              , "| chunks"
                         true $ div
                           {} (:inner-text tok)
                             :class-name $ str-spaced style-line style-no-change (if by-word? style-word-mode)
                             ; :title $ str (:count chunk) "| chunks reversed"
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'respo.schema/Component)
+              :args $ [] 'Dynamic 'Bool
         |comp-divider $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defcomp comp-divider () $ div
@@ -204,6 +215,7 @@
             respo.comp.space :refer $ =<
             respo.comp.inspect :refer $ comp-inspect
             reel.comp.reel :refer $ comp-reel
+            reel.schema :as reel-schema
             respo-md.comp.md :refer $ comp-md
             app.config :refer $ dev?
             |diff :as diff
@@ -211,7 +223,8 @@
       :defs $ {}
         |dev? $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            def dev? $ = |dev (get-env |mode)
+            def dev? $ = |dev
+              option:unwrap-or (get-env |mode) |release
           :examples $ []
           :schema $ :: 'Dynamic
         |site $ %{} 'CodeEntry (:doc |)
@@ -246,9 +259,11 @@
               js/window.addEventListener |beforeunload persist-storage!
               repeat! 60 persist-storage!
               let
-                  raw $ js/localStorage.getItem (:storage-key config/site)
-                when (some? raw)
-                  dispatch! $ :: :hydrate-storage (parse-cirru-edn raw)
+                  raw $ js/localStorage.getItem
+                    option:unwrap-or (get config/site :storage-key) |
+                when (js-present? raw)
+                  dispatch! $ :: :hydrate-storage
+                    parse-cirru-edn $ unsafe-coerce raw 'String
               js/window.addEventListener |keydown $ fn (event)
                 cond
                     and (.-metaKey event)
@@ -258,9 +273,13 @@
                     dispatch! $ :: :clear-text
                   (and (.-metaKey event) (= |i (.-key event)))
                     dispatch! $ :: :swap-text
+                  true nil
               println "|App started."
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ []
+              :features $ #{} :js-ffi
         |mount-target $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def mount-target $ js/document.querySelector |.app
@@ -269,10 +288,15 @@
         |persist-storage! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn persist-storage! (? e)
-              js/localStorage.setItem (:storage-key config/site)
-                format-cirru-edn $ :store @*reel
+              js/localStorage.setItem
+                option:unwrap-or (get config/site :storage-key) |
+                format-cirru-edn $ reel-schema/read-field @*reel :store
+              , nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ [] 'Dynamic
+              :features $ #{} :js-ffi
         |reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn reload! () $ if (nil? build-errors)
@@ -313,6 +337,11 @@
             |bottom-tip :default hud!
     |app.schema $ %{} 'FileEntry
       :defs $ {}
+        |StoreData $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            defstruct StoreData (:states 'Dynamic) (:page 'Dynamic) (:sorted? 'Dynamic) (:show-result? 'Dynamic) (:by-word? 'Dynamic) (:old-text 'Dynamic) (:new-text 'Dynamic)
+          :examples $ []
+          :schema $ :: 'Dynamic
         |store $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def store $ {}
@@ -324,7 +353,7 @@
               :old-text |
               :new-text |
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'app.schema/StoreData
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote (ns app.schema)
     |app.updater $ %{} 'FileEntry
@@ -352,7 +381,9 @@
                     assoc :new-text $ :old-text store
                 _ $ do (eprintln "|Unkown op:" op) store
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'app.schema/StoreData)
+              :args $ [] 'app.schema/StoreData 'Dynamic 'Number 'Number
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns app.updater $ :require
