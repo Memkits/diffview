@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "description": "ClojureScript workflow using Calcit Editor",
   "main": "index.js",
-  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git@github.com:mvc-works/calcit-workflow.git"
@@ -15,7 +14,7 @@
     "vite": "^7.2.2"
   },
   "dependencies": {
-    "@calcit/procs": "^0.9.20",
+    "@calcit/procs": "^0.13.19",
     "diff": "^8.0.2"
   }
 }
