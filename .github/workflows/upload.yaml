@@ -23,7 +23,7 @@ jobs:
         corepack prepare yarn@4.12.0 --activate
         yarn --version
 
-    - uses: calcit-lang/setup-cr@0.0.9
+    - uses: calcit-lang/setup-calcit@ca701be5a471759e442aa053cd100720bbe1f09f # v1.5.0
 
     - name: "install modules"
       run: caps --ci
@@ -39,6 +39,7 @@ jobs:
         cr calcit.cirru js
         yarn install --immutable
         yarn vite build --base=./
+        node --test scripts/upgrade.test.mjs
 
     - name: Deploy to server
       id: deploy

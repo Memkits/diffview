@@ -5,14 +5,14 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@calcit/procs@npm:^0.13.27":
-  version: 0.13.27
-  resolution: "@calcit/procs@npm:0.13.27"
+"@calcit/procs@npm:0.14.17":
+  version: 0.14.17
+  resolution: "@calcit/procs@npm:0.14.17"
   dependencies:
     "@calcit/ternary-tree": "npm:0.0.26"
     "@cirru/parser.ts": "npm:^0.0.9"
     "@cirru/writer.ts": "npm:^0.1.9"
-  checksum: 10c0/f3f2d1a3dd94797f99bec39cbf722b7d98d0308d0643f861997b1accc44fe68f5922149b268881aae1df4a3524968e3f10c58870358952bd959ff4dddcfd326a
+  checksum: 10c0/91b236157b56eb3c9478796d31e2bb96f3668ec57dddb2875162c4a069f5b8ee769b8dd9146f3f34d71812393e72cff0c47022e59e605fffecbeca2b0787b8da
   languageName: node
   linkType: hard
 
@@ -445,7 +445,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "calcit-workflow@workspace:."
   dependencies:
-    "@calcit/procs": "npm:^0.13.27"
+    "@calcit/procs": "npm:0.14.17"
     bottom-tip: "npm:^0.1.5"
     diff: "npm:^8.0.2"
     vite: "npm:^7.3.1"

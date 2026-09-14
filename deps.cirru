@@ -1,8 +1,8 @@
 
-{} (:calcit-version |0.13.27)
+{} (:calcit-version |0.14.17)
   :version |0.1.0
-  :dependencies $ {} (|Respo/reel.calcit |main)
-    |Respo/respo-markdown.calcit |0.4.22
-    |Respo/respo-ui.calcit |0.7.9
-    |Respo/respo.calcit |0.16.81
-    |calcit-lang/lilac |main
+  :dependencies $ {} (|Respo/reel.calcit |0.6.24)
+    |Respo/respo-markdown.calcit |0.4.37
+    |Respo/respo-ui.calcit |0.7.23
+    |Respo/respo.calcit |0.16.102
+    |calcit-lang/lilac |0.5.9
