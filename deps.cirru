@@ -5,4 +5,3 @@
     |Respo/respo-markdown.calcit |0.4.41
     |Respo/respo-ui.calcit |0.7.28
     |Respo/respo.calcit |0.16.111
-    |calcit-lang/lilac |0.5.9
