@@ -9,9 +9,13 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: cos-upload-${{ github.repository }}-${{ github.event_name == 'pull_request' && 'pr' || 'production' }}
+  cancel-in-progress: false
+
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -33,20 +37,26 @@ jobs:
           corepack prepare yarn@4.18.0 --activate
           yarn --version
 
-      # Current Respo modules still request preceding compatible releases, so
-      # strict Caps resolution rejects the highest SemVer set selected here.
       - name: Install and validate dependencies
         run: |
-          caps --ci
+          set -euo pipefail
+          caps --ci --strict
           yarn install --immutable
           caps verify --toolchain
 
       - name: Validate Calcit snapshot
         run: |
+          set -euo pipefail
+          test "$(calcit --version)" = "0.27.0"
+          test -f calcit.cirru
+          test -f deps.cirru
+          test ! -e compact.cirru
+          test ! -e package.cirru
           calcit calcit.cirru fix --workflow strict --verify --format edn
           calcit calcit.cirru edit format
           git diff --exit-code -- calcit.cirru
           calcit calcit.cirru --check-only
+          calcit calcit.cirru analyze check-public --ns app.comp.container --ns app.config --ns app.main --ns app.schema --ns app.updater --summary-only --format json
           calcit calcit.cirru analyze check-types --summary-only --format json
           calcit calcit.cirru analyze weak-types --only schema-dynamic,code-dynamic --intent unresolved --summary-only --format json
           calcit calcit.cirru analyze deprecated --summary-only --format json
@@ -57,6 +67,7 @@ jobs:
         env:
           CDN_ORIGIN: https://cos-sh.tiye.me
         run: |
+          set -euo pipefail
           if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
             asset_prefix="${GITHUB_REPOSITORY}/pr/"
           elif [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
@@ -71,6 +82,8 @@ jobs:
           calcit calcit.cirru js
           node --test scripts/upgrade.test.mjs
           yarn vite build --base="$VITE_BASE_URL"
+          node --test scripts/cdn-path.test.mjs
+          node scripts/check-cdn-path.mjs
 
       - name: Upload static assets to COS
         if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
