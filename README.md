@@ -13,6 +13,8 @@ by CI. Dependencies are resolved with `caps --ci --strict`.
 The COS action verifies uploaded resources with its built-in verify settings;
 no extra CDN checker is needed. Existing external fonts and server paths remain
 unchanged.
+Each PR run uses its own preview prefix (`pr/<number>/<run-id>/`) and concurrency
+group. The six runtime checks do not claim to validate generated CDN URLs.
 
 ### Workflow
 
