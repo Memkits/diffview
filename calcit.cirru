@@ -3,9 +3,9 @@
   :about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `calcit query` to inspect and `calcit edit`/`calcit tree` to modify. Run `calcit docs agents --contract` before mutations; use `--full` for first orientation or changed contract digest. Manual edits must follow format and schema conventions, then run `calcit edit format`."
   :package |app
   :entries $ {} $ :default
-    {} (:description |) (:init-fn 'app.main/main!) (:mode :native) (:reload-fn 'app.main/reload!)
+    {} (:description |) (:init-fn 'app.main/main!) (:mode :js) (:reload-fn 'app.main/reload!) (:target :browser)
       :feature-policy $ {}
-      :modules $ [] |respo.calcit/ |respo-ui.calcit/ |respo-markdown.calcit/ |reel.calcit/ |js-ffi/
+      :modules $ [] |respo.calcit/ |respo-ui.calcit/ |reel.calcit/ |js-ffi/
       :type-slots $ {}
   :files $ {}
     'app.comp.container $ %{} 'FileEntry
@@ -84,11 +84,11 @@
                 [] idx $ let
                     tok $ :value chunk
                   cond
-                      option:some? $ :removed chunk
+                      option:unwrap-or (:removed chunk) false
                       div $ {} (:inner-text tok)
                         :class-name $ str-spaced style-line style-removed $ if by-word? style-word-mode
                         :title $ str "|Removed " (:count chunk) "| chunks"
-                    (option:some? (:added chunk))
+                    (option:unwrap-or (:added chunk) false)
                       div $ {} (:inner-text tok)
                         :class-name $ str-spaced style-line style-added $ if by-word? style-word-mode
                         :title $ str "|Added " (:count chunk) "| chunks"
@@ -198,7 +198,6 @@
             respo.comp.inspect :refer $ comp-inspect
             reel.comp.reel :refer $ comp-reel
             reel.schema :as reel-schema
-            respo-md.comp.md :refer $ comp-md
             app.config :refer $ dev?
             |diff :as diff
     'app.config $ %{} 'FileEntry

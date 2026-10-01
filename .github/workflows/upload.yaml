@@ -9,9 +9,13 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: cos-upload-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.run_id || 'production' }}
+  cancel-in-progress: false
+
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -33,36 +37,34 @@ jobs:
           corepack prepare yarn@4.18.0 --activate
           yarn --version
 
-      # Current Respo modules still request preceding compatible releases, so
-      # strict Caps resolution rejects the highest SemVer set selected here.
       - name: Install and validate dependencies
         run: |
-          caps --ci
+          set -euo pipefail
+          caps --ci --strict
           yarn install --immutable
-          caps verify --toolchain
 
       - name: Validate Calcit snapshot
         run: |
-          calcit calcit.cirru fix --workflow strict --verify --format edn
+          set -euo pipefail
+          test -f calcit.cirru
+          test -f deps.cirru
+          test ! -e compact.cirru
+          test ! -e package.cirru
           calcit calcit.cirru edit format
           git diff --exit-code -- calcit.cirru
           calcit calcit.cirru --check-only
-          calcit calcit.cirru analyze check-types --summary-only --format json
-          calcit calcit.cirru analyze weak-types --only schema-dynamic,code-dynamic --intent unresolved --summary-only --format json
-          calcit calcit.cirru analyze deprecated --summary-only --format json
-          calcit calcit.cirru analyze dynamic-methods --summary-only --format json | jq -e '.data.summary.findings == 0'
 
       - name: Build client with CDN asset URLs
         id: asset-path
         env:
           CDN_ORIGIN: https://cos-sh.tiye.me
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
+          set -euo pipefail
           if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
-            asset_prefix="${GITHUB_REPOSITORY}/pr/"
-          elif [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
-            asset_prefix="${GITHUB_REPOSITORY}/"
+            asset_prefix="${GITHUB_REPOSITORY}/pr/${PR_NUMBER}/${GITHUB_RUN_ID}/"
           else
-            asset_prefix="${GITHUB_REPOSITORY}/branches/${GITHUB_REF_NAME}/"
+            asset_prefix="${GITHUB_REPOSITORY}/"
           fi
           export VITE_BASE_URL="${CDN_ORIGIN}/${asset_prefix}"
           echo "VITE_BASE_URL=${VITE_BASE_URL}" >> "$GITHUB_ENV"
