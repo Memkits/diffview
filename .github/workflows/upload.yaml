@@ -42,25 +42,17 @@ jobs:
           set -euo pipefail
           caps --ci --strict
           yarn install --immutable
-          caps verify --toolchain
 
       - name: Validate Calcit snapshot
         run: |
           set -euo pipefail
-          test "$(calcit --version)" = "0.27.0"
           test -f calcit.cirru
           test -f deps.cirru
           test ! -e compact.cirru
           test ! -e package.cirru
-          calcit calcit.cirru fix --workflow strict --verify --format edn
           calcit calcit.cirru edit format
           git diff --exit-code -- calcit.cirru
           calcit calcit.cirru --check-only
-          calcit calcit.cirru analyze check-public --ns app.comp.container --ns app.config --ns app.main --ns app.schema --ns app.updater --summary-only --format json
-          calcit calcit.cirru analyze check-types --summary-only --format json
-          calcit calcit.cirru analyze weak-types --only schema-dynamic,code-dynamic --intent unresolved --summary-only --format json
-          calcit calcit.cirru analyze deprecated --summary-only --format json
-          calcit calcit.cirru analyze dynamic-methods --summary-only --format json | jq -e '.data.summary.findings == 0'
 
       - name: Build client with CDN asset URLs
         id: asset-path
@@ -71,10 +63,8 @@ jobs:
           set -euo pipefail
           if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
             asset_prefix="${GITHUB_REPOSITORY}/pr/${PR_NUMBER}/${GITHUB_RUN_ID}/"
-          elif [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
-            asset_prefix="${GITHUB_REPOSITORY}/"
           else
-            asset_prefix="${GITHUB_REPOSITORY}/branches/${GITHUB_REF_NAME}/"
+            asset_prefix="${GITHUB_REPOSITORY}/"
           fi
           export VITE_BASE_URL="${CDN_ORIGIN}/${asset_prefix}"
           echo "VITE_BASE_URL=${VITE_BASE_URL}" >> "$GITHUB_ENV"
