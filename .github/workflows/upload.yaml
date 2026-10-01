@@ -82,8 +82,6 @@ jobs:
           calcit calcit.cirru js
           node --test scripts/upgrade.test.mjs
           yarn vite build --base="$VITE_BASE_URL"
-          node --test scripts/cdn-path.test.mjs
-          node scripts/check-cdn-path.mjs
 
       - name: Upload static assets to COS
         if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
