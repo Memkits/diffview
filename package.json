@@ -10,6 +10,11 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "packageManager": "yarn@4.18.0",
+  "scripts": {
+    "compile": "calcit calcit.cirru",
+    "build": "yarn compile && vite build",
+    "dev": "yarn compile && vite"
+  },
   "devDependencies": {
     "bottom-tip": "^0.1.5",
     "vite": "8.3.1"
