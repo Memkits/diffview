@@ -4,19 +4,19 @@ import test from "node:test";
 import { assoc, init_tags } from "../js-out/calcit.core.mjs";
 import { comp_container } from "../js-out/app.comp.container.mjs";
 import { store as defaultStore } from "../js-out/app.schema.mjs";
-import { reel as reelSchema } from "../js-out/reel.schema.mjs";
+import { new_reel } from "../js-out/reel.typed.mjs";
 import * as clt from "../js-out/calcit.core.mjs";
 import { updater } from "../js-out/app.updater.mjs";
 import { sort_by_line } from "../js-out/app.comp.container.mjs";
 import { make_string } from "../js-out/respo.render.html.mjs";
-import { component_$q_, component_tree } from "../js-out/respo.util.detect.mjs";
+import { child_pair_value, component_$q_, component_tree } from "../js-out/respo.util.detect.mjs";
 
-const t = init_tags(["base", "store", "states", "old-text", "new-text", "show-result?", "sorted?", "by-word?", "children", "event", "input", "click", "value", "data", "editor"]);
+const t = init_tags(["states", "old-text", "new-text", "show-result?", "sorted?", "by-word?", "children", "event", "input", "click", "value", "data", "editor"]);
 const unwrap = clt.option_$o_unwrap;
 const read = (value, key) => unwrap(clt.get(value, key));
 const op = (name, ...args) => clt._$o__$o_(init_tags([name])[name], ...args);
 const apply = (store, name, ...args) => updater(store, op(name, ...args), "test", 0);
-const render = (store) => comp_container(assoc(assoc(reelSchema, t.base, store), t.store, store));
+const render = (store) => comp_container(new_reel(store));
 
 function handlers(node, kind) {
   if (component_$q_(node)) return handlers(unwrap(component_tree(node)), kind);
@@ -28,19 +28,19 @@ function handlers(node, kind) {
   }
   const children = clt.get(node, t.children);
   if (clt.option_$o_some_$q_(children)) {
-    for (const pair of unwrap(children).toArray()) result.push(...handlers(unwrap(clt.nth(pair, 1)), kind));
+    for (const pair of unwrap(children).toArray()) result.push(...handlers(child_pair_value(pair), kind));
   }
   return result;
 }
 
 test("npm diff chunks decode into typed Calcit data", () => {
-  const tags = init_tags(["base", "new-text", "old-text", "store"]);
+  const tags = init_tags(["new-text", "old-text"]);
   const store = assoc(
     assoc(defaultStore, tags["old-text"], "one\ntwo"),
     tags["new-text"],
     "one\nthree",
   );
-  const reel = assoc(assoc(reelSchema, tags.base, store), tags.store, store);
+  const reel = new_reel(store);
 
   assert.ok(comp_container(reel));
 });
