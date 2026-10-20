@@ -14,6 +14,7 @@ Released COS action v1.2.0 validates HTML references and verifies public uploads
 no extra CDN checker is needed. Existing external fonts and server paths remain
 unchanged.
 Each PR run uses its own preview prefix (`pr/<number>/<run-id>/<attempt>/`).
+Fork and Dependabot PRs retain all checks and builds but do not upload previews; ordinary Actions deployment secrets are not provided to Dependabot.
 Runs queue per PR and separately for production, without cancelling uploads.
 The six existing runtime checks cover diff behavior, not CDN verification.
 
@@ -28,7 +29,7 @@ entry/all-public checks, toolchain verification and the existing business tests.
 与 Map 存档均经过检查恢复；新存档以同字段 Map 保存，不包含 Reel 调试历史。
 预览 COS、生产 CDN 和原服务器路径不变，仍只使用 action 自带上传校验。
 
-正式 0.30.1 release 尚无 CLI 资产，故明确使用已发布的配对候选；Respo
+正式 0.30.1 的 CLI/npm 配对尚未完成发布，故明确使用已完整发布的配对候选；Respo
 0.16.122、Reel 0.6.39、UI 0.7.41 均为正式模块 tag，移除旧 alpha 模块依赖。
 业务 StoreData 配合 Reel `State<Enum,StoreData>`，不再强转 Reel store。
 文本和组件游标在写入前检查，DOM、键盘及存储使用真实宿主边界。
