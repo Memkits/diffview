@@ -57,9 +57,6 @@ jobs:
           git diff --exit-code -- calcit.cirru
           calcit calcit.cirru --check-only --all-defs
           calcit calcit.cirru fix --workflow strict --verify --format json
-          calcit calcit.cirru --check-only \
-            --ns app.comp.container --ns app.config --ns app.main \
-            --ns app.schema --ns app.updater --summary-only --format json
 
       - name: Build client with CDN asset URLs
         id: asset-path

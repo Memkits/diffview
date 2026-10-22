@@ -6,7 +6,15 @@ Diffview
 
 http://r.tiye.me/Memkits/diffview/
 
-Use paired Calcit / `@calcit/procs` 0.30.1-alpha.5 and the canonical `calcit.cirru` / `deps.cirru` files.
+### 使用者影响：正式 Calcit 0.30.1 配对
+
+CLI/runtime一起升级到正式 **0.30.1**，同步Reel0.6.41、UI0.8.0、Respo0.16.124
+及传递JS-FFI0.2.5、Router0.8.37。请重新安装完整依赖图、生成JS并刷新，勿混装旧alpha缓存。
+本次不改Snapshot、行/词差异、Sorted/Swap/Clear、快捷键或存档格式/key；旧Struct/Map恢复合同保留。
+删除all-defs已覆盖的重复namespace清单，完整strict、原六项业务回归和COS内置verify保留，
+不增加验证脚本、concurrently、预算或兼容强转。不改原前端/服务器路径；PR只预览，不部署生产。
+
+Use paired formal Calcit / `@calcit/procs` 0.30.1 and the canonical `calcit.cirru` / `deps.cirru` files.
 Retired `compact.cirru` and `package.cirru` snapshots are ignored and rejected
 by CI. Dependencies are resolved with `caps --ci --strict`.
 
@@ -21,16 +29,16 @@ The six existing runtime checks cover diff behavior, not CDN verification.
 `yarn build` compiles the default JS browser entry and builds once, using
 `VITE_BASE_URL` when set. `yarn dev` compiles initially and starts Vite; run
 `calcit calcit.cirru -w` in another terminal for live edits. CI keeps canonical,
-entry/all-public checks, toolchain verification and the existing business tests.
+all-definition/strict checks, toolchain verification and the existing business tests.
 
-### 0.30.1 候选迁移
+### 历史：0.30.1-alpha.5 源码迁移
 
 本轮保留行/词差异、Sorted、Swap、Clear、原 ⌘ 快捷键及存储 key。旧 Struct
 与 Map 存档均经过检查恢复；新存档以同字段 Map 保存，不包含 Reel 调试历史。
 预览 COS、生产 CDN 和原服务器路径不变，仍只使用 action 自带上传校验。
 
-正式 0.30.1 的 CLI/npm 配对尚未完成发布，故明确使用已完整发布的配对候选；Respo
-0.16.122、Reel 0.6.39、UI 0.7.41 均为正式模块 tag，移除旧 alpha 模块依赖。
+该历史迁移使用alpha.5配对，Respo0.16.122、Reel0.6.39、UI0.7.41模块图；
+当前正式图见本文开头，以下历史结果不冒充本轮验收。
 业务 StoreData 配合 Reel `State<Enum,StoreData>`，不再强转 Reel store。
 文本和组件游标在写入前检查，DOM、键盘及存储使用真实宿主边界。
 Ref watcher 和 join-string 使用当前写法。
