@@ -16,6 +16,7 @@ CLI/runtime 继续正式 **0.30.1**，同步精确正式 Reel 0.6.42、UI 0.8.1�
 comp-checked 的处理器参数从错误的 RespoEvent Struct 改为真实 Map 事件/dispatch Fn 合同，不伪装为封闭业务 Op。
 19 处 CSS 长度/关键字按原渲染规则改为等价 String，不改变尺寸、颜色或布局。
 完整 strict、原六项业务回归和 COS 内置 verify 保留；不新增验证脚本、concurrently、预算、强转或测试框架。
+删除旧 alpha 的 npm 预批准例外，正式包按普通安装策略验证，不新增正式包例外。
 不改原前端/服务器路径；PR 只预览，不部署生产。正常刷新恢复不代表坏存档验收；进展见 [#46](https://github.com/Memkits/diffview/issues/46)。
 
 Use paired formal Calcit / `@calcit/procs` 0.30.1 and the canonical `calcit.cirru` / `deps.cirru` files.
