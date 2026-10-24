@@ -14,17 +14,17 @@
           :code $ quote $ defcomp comp-checked (checked? text handler)
             div
               {} (:class-name css/row-center)
-                :style $ {} $ :cursor :pointer
+                :style $ {} $ :cursor |pointer
                 :on-click handler
               input $ {} (:type |checkbox) (:checked checked?)
-                :style $ {} $ :cursor :pointer
+                :style $ {} $ :cursor |pointer
               <> text css/font-fancy
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] 'Bool 'String $ :: 'Fn
               {} (:return 'Unit)
-                :args $ [] 'respo.schema/RespoEvent $ :: 'Fn
-                  {} (:return 'Unit)
+                :args $ [] (:: 'Map 'Tag 'Dynamic)
+                  :: 'Fn $ {} (:rest 'Dynamic) (:return 'Unit)
                     :args $ [] 'Dynamic
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-container (reel)
@@ -48,7 +48,7 @@
                 div
                   {}
                     :class-name $ str-spaced css/flex css/row
-                    :style $ {} $ :overflow :auto
+                    :style $ {} $ :overflow |auto
                   if show-result? (comp-diff-view changes by-word?)
                     div
                       {} $ :class-name $ str-spaced css/expand css/row css/flex
@@ -57,7 +57,11 @@
                         :value $ :old-text store
                         :placeholder "|Old text"
                         :on-input $ fn (e d!)
-                          d! $ :: :write-old $ option:unwrap-or (get e :value) |
+                          hint-fn $ {} (:return 'Unit)
+                            :args $ [] (:: 'Map 'Tag 'Dynamic)
+                              :: 'Fn $ {} (:return 'Unit) (:rest 'Dynamic)
+                                :args $ [] 'Dynamic
+                          d! $ :: :write-old $ .unwrap-or (get e :value) |
                         :spell-check false
                         :autofocus true
                       comp-divider
@@ -66,10 +70,14 @@
                         :value $ :new-text store
                         :placeholder "|New text"
                         :on-input $ fn (e d!)
-                          d! $ :: :write-new $ option:unwrap-or (get e :value) |
+                          hint-fn $ {} (:return 'Unit)
+                            :args $ [] (:: 'Map 'Tag 'Dynamic)
+                              :: 'Fn $ {} (:return 'Unit) (:rest 'Dynamic)
+                                :args $ [] 'Dynamic
+                          d! $ :: :write-new $ .unwrap-or (get e :value) |
                         :spellcheck false
                 when dev? $ comp-reel (>> states :reel) (reel-view/view-data reel) ({})
-                when dev? $ comp-inspect |Store store $ {} (:bottom 0)
+                when dev? $ comp-inspect |Store store $ {} (:bottom |0px)
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] $ :: 'reel.typed/State 'Enum 'app.schema/StoreData
@@ -78,17 +86,17 @@
           :code $ quote $ defcomp comp-diff-view (changes by-word?)
             list->
               {} (:class-name css/flex)
-                :style $ {} (:padding-bottom 80) (:overflow :auto)
+                :style $ {} (:padding-bottom |80px) (:overflow |auto)
                   :line-height $ if by-word? |20px
               -> changes $ map-indexed $ fn (idx chunk)
                 [] idx $ let
                     tok $ :value chunk
                   cond
-                      option:unwrap-or (:removed chunk) false
+                      .unwrap-or (:removed chunk) false
                       div $ {} (:inner-text tok)
                         :class-name $ str-spaced style-line style-removed $ if by-word? style-word-mode
                         :title $ str "|Removed " (:count chunk) "| chunks"
-                    (option:unwrap-or (:added chunk) false)
+                    (.unwrap-or (:added chunk) false)
                       div $ {} (:inner-text tok)
                         :class-name $ str-spaced style-line style-added $ if by-word? style-word-mode
                         :title $ str "|Added " (:count chunk) "| chunks"
@@ -101,7 +109,7 @@
         'comp-divider $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-divider ()
             div $ {} $ :style
-              {} (:width 1)
+              {} (:width |1px)
                 :background-color $ hsl 0 0 94
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
@@ -116,20 +124,40 @@
               div
                 {} $ :class-name css/row-center
                 comp-checked show-result? "|Result?(⌘ e)" $ fn (e d!)
+                  hint-fn $ {} (:return 'Unit)
+                    :args $ [] (:: 'Map 'Tag 'Dynamic)
+                      :: 'Fn $ {} (:return 'Unit) (:rest 'Dynamic)
+                        :args $ [] 'Dynamic
                   d! $ :: :toggle-result
                 =< 16 nil
                 comp-checked sorted? |Sorted $ fn (e d!)
+                  hint-fn $ {} (:return 'Unit)
+                    :args $ [] (:: 'Map 'Tag 'Dynamic)
+                      :: 'Fn $ {} (:return 'Unit) (:rest 'Dynamic)
+                        :args $ [] 'Dynamic
                   d! $ :: :toggle-sorted
                 =< 16 nil
                 comp-checked by-word? |ByWord $ fn (e d!)
+                  hint-fn $ {} (:return 'Unit)
+                    :args $ [] (:: 'Map 'Tag 'Dynamic)
+                      :: 'Fn $ {} (:return 'Unit) (:rest 'Dynamic)
+                        :args $ [] 'Dynamic
                   d! $ :: :toggle-word
                 =< 16 nil
                 a $ {} (:class-name css/link) (:inner-text |Swap) (:title "|⌘ i")
                   :on-click $ fn (e d!)
+                    hint-fn $ {} (:return 'Unit)
+                      :args $ [] (:: 'Map 'Tag 'Dynamic)
+                        :: 'Fn $ {} (:return 'Unit) (:rest 'Dynamic)
+                          :args $ [] 'Dynamic
                     d! $ :: :swap-text
                 =< 16 nil
                 a $ {} (:class-name css/link) (:inner-text |Clear) (:title "|⌘ k")
                   :on-click $ fn (e d!)
+                    hint-fn $ {} (:return 'Unit)
+                      :args $ [] (:: 'Map 'Tag 'Dynamic)
+                        :: 'Fn $ {} (:return 'Unit) (:rest 'Dynamic)
+                          :args $ [] 'Dynamic
                     d! $ :: :clear-text
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
@@ -151,7 +179,7 @@
           :schema $ :: 'String
         'style-line $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle style-line
-            {} $ |& $ {} (:line-height |24px) (:font-size 12) (:font-family ui/font-code) (:margin 0) (:padding "|0 8px") (:white-space :pre) (:overflow-x :auto)
+            {} $ |& $ {} (:line-height |24px) (:font-size |12px) (:font-family ui/font-code) (:margin |0px) (:padding "|0 8px") (:white-space |pre) (:overflow-x |auto)
           :examples $ []
           :schema $ :: 'String
         'style-no-change $ %{} 'CodeEntry (:doc |)
@@ -165,12 +193,12 @@
           :code $ quote $ defstyle style-removed
             {} $ |& $ {}
               :background-color $ hsl 0 100 78
-              :color :white
+              :color |white
           :examples $ []
           :schema $ :: 'String
         'style-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle style-text
-            {} $ |& $ {} (:font-family ui/font-code) (:line-height |20px) (:font-size 12) (:white-space :pre) (:overflow :auto) (:border :none) (:padding "|8px 8px 80px 8px") (:resize :none)
+            {} $ |& $ {} (:font-family ui/font-code) (:line-height |20px) (:font-size |12px) (:white-space |pre) (:overflow |auto) (:border |none) (:padding "|8px 8px 80px 8px") (:resize |none)
           :examples $ []
           :schema $ :: 'String
         'style-toolbar $ %{} 'CodeEntry (:doc |)
@@ -183,7 +211,7 @@
           :schema $ :: 'String
         'style-word-mode $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle style-word-mode
-            {} $ |& $ {} (:display :inline) (:white-space :pre-wrap)
+            {} $ |& $ {} (:display |inline) (:white-space |pre-wrap)
           :examples $ []
           :schema $ :: 'String
       :ns $ %{} 'NsEntry (:doc |)
@@ -204,7 +232,7 @@
       :defs $ {}
         'dev? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def dev?
-            = |dev $ option:unwrap-or (get-env |mode) |release
+            = |dev $ .unwrap-or (get-env |mode) |release
           :examples $ []
           :schema $ :: 'Bool
         'site $ %{} 'CodeEntry (:doc |)
@@ -239,6 +267,11 @@
           :code $ quote $ defn main! ()
             if config/dev? $ load-console-formatter!
             println "|Running mode:" $ if config/dev? |dev |release
+            match
+              browser/storage-get $ .unwrap-or (get config/site :storage-key) |
+              (:some raw)
+                dispatch! $ :: :hydrate-storage $ parse-cirru-edn raw
+              (:none) &unit
             render-app!
             add-watch! *reel :changes $ fn (r p)
               hint-fn $ {}
@@ -252,11 +285,6 @@
                 :return 'Unit
               persist-storage!
             repeat! 60 persist-storage!
-            match
-              browser/storage-get $ option:unwrap-or (get config/site :storage-key) |
-              (:some raw)
-                dispatch! $ :: :hydrate-storage $ parse-cirru-edn raw
-              (:none) &unit
             browser/add-event-listener! |keydown $ fn (event)
               hint-fn $ {}
                 :args $ [] 'js-ffi.browser/EventHost
@@ -292,7 +320,7 @@
         'persist-storage! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn persist-storage! ()
             browser/storage-set!
-              option:unwrap-or (get config/site :storage-key) |
+              .unwrap-or (get config/site :storage-key) |
               format-cirru-edn $ &struct:to-map $ :store @*reel
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
