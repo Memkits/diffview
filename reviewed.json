@@ -1,0 +1,3104 @@
+{
+  "namespaces": [
+    {
+      "command": "query.ns",
+      "data": {
+        "definition_count": 2,
+        "doc": "",
+        "namespace": "app.$meta",
+        "ns_code": [
+          "ns",
+          "app.$meta"
+        ]
+      },
+      "schema_version": 1
+    },
+    {
+      "command": "query.ns",
+      "data": {
+        "definition_count": 13,
+        "doc": "",
+        "namespace": "app.comp.container",
+        "ns_code": [
+          "ns",
+          "app.comp.container",
+          [
+            ":require",
+            [
+              "respo-ui.core",
+              ":refer",
+              [
+                "hsl"
+              ]
+            ],
+            [
+              "respo.css",
+              ":refer",
+              [
+                "defstyle"
+              ]
+            ],
+            [
+              "respo-ui.css",
+              ":as",
+              "css"
+            ],
+            [
+              "respo-ui.core",
+              ":as",
+              "ui"
+            ],
+            [
+              "respo.core",
+              ":refer",
+              [
+                "defcomp",
+                ">>",
+                "list->",
+                "<>",
+                "div",
+                "button",
+                "textarea",
+                "pre",
+                "span",
+                "input",
+                "a"
+              ]
+            ],
+            [
+              "respo.comp.space",
+              ":refer",
+              [
+                "=<"
+              ]
+            ],
+            [
+              "respo.comp.inspect",
+              ":refer",
+              [
+                "comp-inspect"
+              ]
+            ],
+            [
+              "reel.comp.reel",
+              ":refer",
+              [
+                "comp-reel"
+              ]
+            ],
+            [
+              "app.config",
+              ":refer",
+              [
+                "dev?"
+              ]
+            ],
+            [
+              "|diff",
+              ":as",
+              "diff"
+            ],
+            [
+              "reel.typed-compat",
+              ":as",
+              "reel-view"
+            ]
+          ]
+        ]
+      },
+      "schema_version": 1
+    },
+    {
+      "command": "query.ns",
+      "data": {
+        "definition_count": 2,
+        "doc": "",
+        "namespace": "app.config",
+        "ns_code": [
+          "ns",
+          "app.config"
+        ]
+      },
+      "schema_version": 1
+    },
+    {
+      "command": "query.ns",
+      "data": {
+        "definition_count": 8,
+        "doc": "",
+        "namespace": "app.main",
+        "ns_code": [
+          "ns",
+          "app.main",
+          [
+            ":require",
+            [
+              "respo.core",
+              ":refer",
+              [
+                "render!",
+                "clear-cache!",
+                "realize-ssr!"
+              ]
+            ],
+            [
+              "app.comp.container",
+              ":refer",
+              [
+                "comp-container"
+              ]
+            ],
+            [
+              "app.updater",
+              ":refer",
+              [
+                "updater"
+              ]
+            ],
+            [
+              "app.schema",
+              ":as",
+              "schema"
+            ],
+            [
+              "reel.util",
+              ":refer",
+              [
+                "listen-devtools!"
+              ]
+            ],
+            [
+              "app.config",
+              ":as",
+              "config"
+            ],
+            [
+              "|./calcit.build-errors",
+              ":default",
+              "build-errors"
+            ],
+            [
+              "|bottom-tip",
+              ":default",
+              "hud!"
+            ],
+            [
+              "reel.typed",
+              ":as",
+              "typed-reel"
+            ],
+            [
+              "js-ffi.browser",
+              ":as",
+              "browser"
+            ],
+            [
+              "js-ffi.shared",
+              ":as",
+              "host"
+            ]
+          ]
+        ]
+      },
+      "schema_version": 1
+    },
+    {
+      "command": "query.ns",
+      "data": {
+        "definition_count": 4,
+        "doc": "",
+        "namespace": "app.schema",
+        "ns_code": [
+          "ns",
+          "app.schema"
+        ]
+      },
+      "schema_version": 1
+    },
+    {
+      "command": "query.ns",
+      "data": {
+        "definition_count": 1,
+        "doc": "",
+        "namespace": "app.updater",
+        "ns_code": [
+          "ns",
+          "app.updater",
+          [
+            ":require",
+            [
+              "respo.cursor",
+              ":refer",
+              [
+                "update-state-tree"
+              ]
+            ],
+            [
+              "app.schema",
+              ":as",
+              "schema"
+            ]
+          ]
+        ]
+      },
+      "schema_version": 1
+    }
+  ],
+  "definitions": [
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "def",
+          "calcit-dirname",
+          "|"
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.$meta/calcit-dirname",
+        "js_ffi": null,
+        "schema": null,
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:b9c073ddc99189680e33ec22dc7f5689",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "def",
+          "calcit-filename",
+          "|calcit.cirru"
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.$meta/calcit-filename",
+        "js_ffi": null,
+        "schema": null,
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:a2706c65c80308f07d99e2a9ab5bd02b",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defcomp",
+          "comp-checked",
+          [
+            "checked?",
+            "text",
+            "handler"
+          ],
+          [
+            "div",
+            [
+              "{}",
+              [
+                ":class-name",
+                "css/row-center"
+              ],
+              [
+                ":style",
+                [
+                  "{}",
+                  [
+                    ":cursor",
+                    ":pointer"
+                  ]
+                ]
+              ],
+              [
+                ":on-click",
+                "handler"
+              ]
+            ],
+            [
+              "input",
+              [
+                "{}",
+                [
+                  ":type",
+                  "|checkbox"
+                ],
+                [
+                  ":checked",
+                  "checked?"
+                ],
+                [
+                  ":style",
+                  [
+                    "{}",
+                    [
+                      ":cursor",
+                      ":pointer"
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              "<>",
+              "text",
+              "css/font-fancy"
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.container/comp-checked",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Bool",
+              "'String",
+              [
+                "::",
+                "'Fn",
+                [
+                  "{}",
+                  [
+                    ":return",
+                    "'Unit"
+                  ],
+                  [
+                    ":args",
+                    [
+                      "[]",
+                      "'respo.schema/RespoEvent",
+                      [
+                        "::",
+                        "'Fn",
+                        [
+                          "{}",
+                          [
+                            ":return",
+                            "'Unit"
+                          ],
+                          [
+                            ":args",
+                            [
+                              "[]",
+                              "'Dynamic"
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:2280cdeccf17d409cff01bc765535d5b",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defcomp",
+          "comp-container",
+          [
+            "reel"
+          ],
+          [
+            "let",
+            [
+              [
+                "store",
+                [
+                  ":store",
+                  "reel"
+                ]
+              ],
+              [
+                "states",
+                [
+                  ":states",
+                  "store"
+                ]
+              ],
+              [
+                "sorted?",
+                [
+                  ":sorted?",
+                  "store"
+                ]
+              ],
+              [
+                "show-result?",
+                [
+                  ":show-result?",
+                  "store"
+                ]
+              ],
+              [
+                "by-word?",
+                [
+                  ":by-word?",
+                  "store"
+                ]
+              ],
+              [
+                "differ",
+                [
+                  "if",
+                  "by-word?",
+                  "diff/diffWords",
+                  "diff/diffLines"
+                ]
+              ],
+              [
+                "changes",
+                [
+                  "decode-map-as",
+                  [
+                    "to-calcit-data",
+                    [
+                      "if",
+                      "sorted?",
+                      [
+                        "differ",
+                        [
+                          "sort-by-line",
+                          [
+                            ":old-text",
+                            "store"
+                          ]
+                        ],
+                        [
+                          "sort-by-line",
+                          [
+                            ":new-text",
+                            "store"
+                          ]
+                        ]
+                      ],
+                      [
+                        "differ",
+                        [
+                          ":old-text",
+                          "store"
+                        ],
+                        [
+                          ":new-text",
+                          "store"
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "::",
+                    "'List",
+                    "'app.schema/DiffChunk"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "div",
+              [
+                "{}",
+                [
+                  ":class-name",
+                  [
+                    "str-spaced",
+                    "css/global",
+                    "css/fullscreen",
+                    "css/column"
+                  ]
+                ]
+              ],
+              [
+                "comp-toolbar",
+                "show-result?",
+                "sorted?",
+                "by-word?"
+              ],
+              [
+                "div",
+                [
+                  "{}",
+                  [
+                    ":class-name",
+                    [
+                      "str-spaced",
+                      "css/flex",
+                      "css/row"
+                    ]
+                  ],
+                  [
+                    ":style",
+                    [
+                      "{}",
+                      [
+                        ":overflow",
+                        ":auto"
+                      ]
+                    ]
+                  ]
+                ],
+                [
+                  "if",
+                  "show-result?",
+                  [
+                    "comp-diff-view",
+                    "changes",
+                    "by-word?"
+                  ],
+                  [
+                    "div",
+                    [
+                      "{}",
+                      [
+                        ":class-name",
+                        [
+                          "str-spaced",
+                          "css/expand",
+                          "css/row",
+                          "css/flex"
+                        ]
+                      ]
+                    ],
+                    [
+                      "textarea",
+                      [
+                        "{}",
+                        [
+                          ":class-name",
+                          [
+                            "str-spaced",
+                            "css/textarea",
+                            "css/expand",
+                            "style-text"
+                          ]
+                        ],
+                        [
+                          ":value",
+                          [
+                            ":old-text",
+                            "store"
+                          ]
+                        ],
+                        [
+                          ":placeholder",
+                          "|Old text"
+                        ],
+                        [
+                          ":on-input",
+                          [
+                            "fn",
+                            [
+                              "e",
+                              "d!"
+                            ],
+                            [
+                              "d!",
+                              [
+                                "::",
+                                ":write-old",
+                                [
+                                  "option:unwrap-or",
+                                  [
+                                    "get",
+                                    "e",
+                                    ":value"
+                                  ],
+                                  "|"
+                                ]
+                              ]
+                            ]
+                          ]
+                        ],
+                        [
+                          ":spell-check",
+                          "false"
+                        ],
+                        [
+                          ":autofocus",
+                          "true"
+                        ]
+                      ]
+                    ],
+                    [
+                      "comp-divider"
+                    ],
+                    [
+                      "textarea",
+                      [
+                        "{}",
+                        [
+                          ":class-name",
+                          [
+                            "str-spaced",
+                            "css/textarea",
+                            "css/expand",
+                            "style-text"
+                          ]
+                        ],
+                        [
+                          ":value",
+                          [
+                            ":new-text",
+                            "store"
+                          ]
+                        ],
+                        [
+                          ":placeholder",
+                          "|New text"
+                        ],
+                        [
+                          ":on-input",
+                          [
+                            "fn",
+                            [
+                              "e",
+                              "d!"
+                            ],
+                            [
+                              "d!",
+                              [
+                                "::",
+                                ":write-new",
+                                [
+                                  "option:unwrap-or",
+                                  [
+                                    "get",
+                                    "e",
+                                    ":value"
+                                  ],
+                                  "|"
+                                ]
+                              ]
+                            ]
+                          ]
+                        ],
+                        [
+                          ":spellcheck",
+                          "false"
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "when",
+                "dev?",
+                [
+                  "comp-reel",
+                  [
+                    ">>",
+                    "states",
+                    ":reel"
+                  ],
+                  [
+                    "reel-view/view-data",
+                    "reel"
+                  ],
+                  [
+                    "{}"
+                  ]
+                ]
+              ],
+              [
+                "when",
+                "dev?",
+                [
+                  "comp-inspect",
+                  "|Store",
+                  "store",
+                  [
+                    "{}",
+                    [
+                      ":bottom",
+                      "0"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.container/comp-container",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              [
+                "::",
+                "'reel.typed/State",
+                "'Enum",
+                "'app.schema/StoreData"
+              ]
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:851b246eeb0fd7a63b8963ab98269421",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defcomp",
+          "comp-diff-view",
+          [
+            "changes",
+            "by-word?"
+          ],
+          [
+            "list->",
+            [
+              "{}",
+              [
+                ":class-name",
+                "css/flex"
+              ],
+              [
+                ":style",
+                [
+                  "{}",
+                  [
+                    ":padding-bottom",
+                    "80"
+                  ],
+                  [
+                    ":overflow",
+                    ":auto"
+                  ],
+                  [
+                    ":line-height",
+                    [
+                      "if",
+                      "by-word?",
+                      "|20px"
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              "->",
+              "changes",
+              [
+                "map-indexed",
+                [
+                  "fn",
+                  [
+                    "idx",
+                    "chunk"
+                  ],
+                  [
+                    "[]",
+                    "idx",
+                    [
+                      "let",
+                      [
+                        [
+                          "tok",
+                          [
+                            ":value",
+                            "chunk"
+                          ]
+                        ]
+                      ],
+                      [
+                        "cond",
+                        [
+                          [
+                            "option:unwrap-or",
+                            [
+                              ":removed",
+                              "chunk"
+                            ],
+                            "false"
+                          ],
+                          [
+                            "div",
+                            [
+                              "{}",
+                              [
+                                ":inner-text",
+                                "tok"
+                              ],
+                              [
+                                ":class-name",
+                                [
+                                  "str-spaced",
+                                  "style-line",
+                                  "style-removed",
+                                  [
+                                    "if",
+                                    "by-word?",
+                                    "style-word-mode"
+                                  ]
+                                ]
+                              ],
+                              [
+                                ":title",
+                                [
+                                  "str",
+                                  "|Removed ",
+                                  [
+                                    ":count",
+                                    "chunk"
+                                  ],
+                                  "| chunks"
+                                ]
+                              ]
+                            ]
+                          ]
+                        ],
+                        [
+                          [
+                            "option:unwrap-or",
+                            [
+                              ":added",
+                              "chunk"
+                            ],
+                            "false"
+                          ],
+                          [
+                            "div",
+                            [
+                              "{}",
+                              [
+                                ":inner-text",
+                                "tok"
+                              ],
+                              [
+                                ":class-name",
+                                [
+                                  "str-spaced",
+                                  "style-line",
+                                  "style-added",
+                                  [
+                                    "if",
+                                    "by-word?",
+                                    "style-word-mode"
+                                  ]
+                                ]
+                              ],
+                              [
+                                ":title",
+                                [
+                                  "str",
+                                  "|Added ",
+                                  [
+                                    ":count",
+                                    "chunk"
+                                  ],
+                                  "| chunks"
+                                ]
+                              ]
+                            ]
+                          ]
+                        ],
+                        [
+                          "true",
+                          [
+                            "div",
+                            [
+                              "{}",
+                              [
+                                ":inner-text",
+                                "tok"
+                              ],
+                              [
+                                ":class-name",
+                                [
+                                  "str-spaced",
+                                  "style-line",
+                                  "style-no-change",
+                                  [
+                                    "if",
+                                    "by-word?",
+                                    "style-word-mode"
+                                  ]
+                                ]
+                              ],
+                              [
+                                ";",
+                                ":title",
+                                [
+                                  "str",
+                                  [
+                                    ":count",
+                                    "chunk"
+                                  ],
+                                  "| chunks reversed"
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.container/comp-diff-view",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              [
+                "::",
+                "'List",
+                "'app.schema/DiffChunk"
+              ],
+              "'Bool"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:1f49673fb88aa88bc67c61bca385699a",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defcomp",
+          "comp-divider",
+          [],
+          [
+            "div",
+            [
+              "{}",
+              [
+                ":style",
+                [
+                  "{}",
+                  [
+                    ":width",
+                    "1"
+                  ],
+                  [
+                    ":background-color",
+                    [
+                      "hsl",
+                      "0",
+                      "0",
+                      "94"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.container/comp-divider",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:3402d1d97fffa02aaea1dbd7027f3ad4",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defcomp",
+          "comp-toolbar",
+          [
+            "show-result?",
+            "sorted?",
+            "by-word?"
+          ],
+          [
+            "div",
+            [
+              "{}",
+              [
+                ":class-name",
+                [
+                  "str-spaced",
+                  "css/row-parted",
+                  "style-toolbar"
+                ]
+              ]
+            ],
+            [
+              "<>",
+              "|Diff View",
+              [
+                "{}",
+                [
+                  ":color",
+                  [
+                    "hsl",
+                    "0",
+                    "0",
+                    "40"
+                  ]
+                ],
+                [
+                  ":font-family",
+                  "ui/font-fancy"
+                ]
+              ]
+            ],
+            [
+              "div",
+              [
+                "{}",
+                [
+                  ":class-name",
+                  "css/row-center"
+                ]
+              ],
+              [
+                "comp-checked",
+                "show-result?",
+                "|Result?(⌘ e)",
+                [
+                  "fn",
+                  [
+                    "e",
+                    "d!"
+                  ],
+                  [
+                    "d!",
+                    [
+                      "::",
+                      ":toggle-result"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "=<",
+                "16",
+                "nil"
+              ],
+              [
+                "comp-checked",
+                "sorted?",
+                "|Sorted",
+                [
+                  "fn",
+                  [
+                    "e",
+                    "d!"
+                  ],
+                  [
+                    "d!",
+                    [
+                      "::",
+                      ":toggle-sorted"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "=<",
+                "16",
+                "nil"
+              ],
+              [
+                "comp-checked",
+                "by-word?",
+                "|ByWord",
+                [
+                  "fn",
+                  [
+                    "e",
+                    "d!"
+                  ],
+                  [
+                    "d!",
+                    [
+                      "::",
+                      ":toggle-word"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "=<",
+                "16",
+                "nil"
+              ],
+              [
+                "a",
+                [
+                  "{}",
+                  [
+                    ":class-name",
+                    "css/link"
+                  ],
+                  [
+                    ":inner-text",
+                    "|Swap"
+                  ],
+                  [
+                    ":title",
+                    "|⌘ i"
+                  ],
+                  [
+                    ":on-click",
+                    [
+                      "fn",
+                      [
+                        "e",
+                        "d!"
+                      ],
+                      [
+                        "d!",
+                        [
+                          "::",
+                          ":swap-text"
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "=<",
+                "16",
+                "nil"
+              ],
+              [
+                "a",
+                [
+                  "{}",
+                  [
+                    ":class-name",
+                    "css/link"
+                  ],
+                  [
+                    ":inner-text",
+                    "|Clear"
+                  ],
+                  [
+                    ":title",
+                    "|⌘ k"
+                  ],
+                  [
+                    ":on-click",
+                    [
+                      "fn",
+                      [
+                        "e",
+                        "d!"
+                      ],
+                      [
+                        "d!",
+                        [
+                          "::",
+                          ":clear-text"
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.container/comp-toolbar",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'respo.schema/Component"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Bool",
+              "'Bool",
+              "'Bool"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:5a5515c2d0f4b849b356bdedd6be8ce8",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defn",
+          "sort-by-line",
+          [
+            "text"
+          ],
+          [
+            "join-string",
+            [
+              "sort",
+              [
+                "split-lines",
+                "text"
+              ],
+              [
+                "fn",
+                [
+                  "a",
+                  "b"
+                ],
+                [
+                  "&compare",
+                  "a",
+                  "b"
+                ]
+              ]
+            ],
+            "&newline"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.container/sort-by-line",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'String"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'String"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:96d46487af0786ffc3c81a736c87ca5a",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defstyle",
+          "style-added",
+          [
+            "{}",
+            [
+              "|&",
+              [
+                "{}",
+                [
+                  ":background-color",
+                  [
+                    "hsl",
+                    "200",
+                    "100",
+                    "92"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.container/style-added",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:9196cfa5df44c086c338d73e5ebd14c4",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defstyle",
+          "style-line",
+          [
+            "{}",
+            [
+              "|&",
+              [
+                "{}",
+                [
+                  ":line-height",
+                  "|24px"
+                ],
+                [
+                  ":font-size",
+                  "12"
+                ],
+                [
+                  ":font-family",
+                  "ui/font-code"
+                ],
+                [
+                  ":margin",
+                  "0"
+                ],
+                [
+                  ":padding",
+                  "|0 8px"
+                ],
+                [
+                  ":white-space",
+                  ":pre"
+                ],
+                [
+                  ":overflow-x",
+                  ":auto"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.container/style-line",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:661594eccb225f8aa3e34bf2f40a653d",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defstyle",
+          "style-no-change",
+          [
+            "{}",
+            [
+              "|&",
+              [
+                "{}",
+                [
+                  ":color",
+                  [
+                    "hsl",
+                    "0",
+                    "0",
+                    "80"
+                  ]
+                ],
+                [
+                  ":line-height",
+                  "|15px"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.container/style-no-change",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:a0a89e6cc0332fdd228755eb52876dd1",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defstyle",
+          "style-removed",
+          [
+            "{}",
+            [
+              "|&",
+              [
+                "{}",
+                [
+                  ":background-color",
+                  [
+                    "hsl",
+                    "0",
+                    "100",
+                    "78"
+                  ]
+                ],
+                [
+                  ":color",
+                  ":white"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.container/style-removed",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:e16ae08b9cac05b491d2284a24529f5f",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defstyle",
+          "style-text",
+          [
+            "{}",
+            [
+              "|&",
+              [
+                "{}",
+                [
+                  ":font-family",
+                  "ui/font-code"
+                ],
+                [
+                  ":line-height",
+                  "|20px"
+                ],
+                [
+                  ":font-size",
+                  "12"
+                ],
+                [
+                  ":white-space",
+                  ":pre"
+                ],
+                [
+                  ":overflow",
+                  ":auto"
+                ],
+                [
+                  ":border",
+                  ":none"
+                ],
+                [
+                  ":padding",
+                  "|8px 8px 80px 8px"
+                ],
+                [
+                  ":resize",
+                  ":none"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.container/style-text",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:277dc443cd5229b1e1af19f57033b2bc",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defstyle",
+          "style-toolbar",
+          [
+            "{}",
+            [
+              "|&",
+              [
+                "{}",
+                [
+                  ":border-bottom",
+                  [
+                    "str",
+                    "|1px solid ",
+                    [
+                      "hsl",
+                      "0",
+                      "0",
+                      "90"
+                    ]
+                  ]
+                ],
+                [
+                  ":line-height",
+                  "|32px"
+                ],
+                [
+                  ":padding",
+                  "|0 8px"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.container/style-toolbar",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:e7d7bf0c028ffa2fd1b429795148e6a8",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defstyle",
+          "style-word-mode",
+          [
+            "{}",
+            [
+              "|&",
+              [
+                "{}",
+                [
+                  ":display",
+                  ":inline"
+                ],
+                [
+                  ":white-space",
+                  ":pre-wrap"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.comp.container/style-word-mode",
+        "js_ffi": null,
+        "schema": "'String",
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:56dd1ce57e297feb992bf8b39e8748d7",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "def",
+          "dev?",
+          [
+            "=",
+            "|dev",
+            [
+              "option:unwrap-or",
+              [
+                "get-env",
+                "|mode"
+              ],
+              "|release"
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.config/dev?",
+        "js_ffi": null,
+        "schema": "'Bool",
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:0cdd8b0d7c2ecaf013b0ca3d6e46e55e",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "def",
+          "site",
+          [
+            "{}",
+            [
+              ":title",
+              "|Diffview"
+            ],
+            [
+              ":storage-key",
+              "|diffview"
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.config/site",
+        "js_ffi": null,
+        "schema": [
+          "::",
+          "'Map",
+          "'Tag",
+          "'String"
+        ],
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:7b1de02d7e4b68e1899c4bd5e7c14903",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defref",
+          "*reel",
+          [
+            "typed-reel/new-reel",
+            "schema/store"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.main/*reel",
+        "js_ffi": null,
+        "schema": [
+          "::",
+          "'Ref",
+          [
+            "::",
+            "'reel.typed/State",
+            "'Enum",
+            "'app.schema/StoreData"
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:5774cd0c357de0e6c82f529fcf30ae1a",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defn",
+          "dispatch!",
+          [
+            "op"
+          ],
+          [
+            "when",
+            "config/dev?",
+            [
+              "js/console.log",
+              "|Dispatch:",
+              "op"
+            ]
+          ],
+          [
+            "if",
+            [
+              "enum?",
+              "op"
+            ],
+            [
+              "match",
+              [
+                "typed-reel/decode-control",
+                "op"
+              ],
+              [
+                [
+                  ":some",
+                  "control"
+                ],
+                [
+                  "reset!",
+                  "*reel",
+                  [
+                    "typed-reel/apply-control",
+                    "updater",
+                    "@*reel",
+                    "control"
+                  ]
+                ]
+              ],
+              [
+                [
+                  ":none"
+                ],
+                [
+                  "reset!",
+                  "*reel",
+                  [
+                    "typed-reel/record-op",
+                    "updater",
+                    "@*reel",
+                    "op",
+                    [
+                      "generate-id!"
+                    ],
+                    [
+                      "host/now-ms"
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              "raise",
+              "|Expected one operation enum"
+            ]
+          ],
+          "&unit"
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.main/dispatch!",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Unit"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Dynamic"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:f6b979332406cba389a45cdf52450d2f",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defn",
+          "main!",
+          [],
+          [
+            "if",
+            "config/dev?",
+            [
+              "load-console-formatter!"
+            ]
+          ],
+          [
+            "println",
+            "|Running mode:",
+            [
+              "if",
+              "config/dev?",
+              "|dev",
+              "|release"
+            ]
+          ],
+          [
+            "render-app!"
+          ],
+          [
+            "add-watch!",
+            "*reel",
+            ":changes",
+            [
+              "fn",
+              [
+                "r",
+                "p"
+              ],
+              [
+                "hint-fn",
+                [
+                  "{}",
+                  [
+                    ":args",
+                    [
+                      "[]",
+                      [
+                        "::",
+                        "'reel.typed/State",
+                        "'Enum",
+                        "'app.schema/StoreData"
+                      ],
+                      [
+                        "::",
+                        "'reel.typed/State",
+                        "'Enum",
+                        "'app.schema/StoreData"
+                      ]
+                    ]
+                  ],
+                  [
+                    ":return",
+                    "'Unit"
+                  ]
+                ]
+              ],
+              [
+                "render-app!"
+              ]
+            ]
+          ],
+          [
+            "listen-devtools!",
+            "|a",
+            "dispatch!"
+          ],
+          [
+            "browser/add-event-listener!",
+            "|beforeunload",
+            [
+              "fn",
+              [
+                "event"
+              ],
+              [
+                "hint-fn",
+                [
+                  "{}",
+                  [
+                    ":args",
+                    [
+                      "[]",
+                      "'js-ffi.browser/EventHost"
+                    ]
+                  ],
+                  [
+                    ":return",
+                    "'Unit"
+                  ]
+                ]
+              ],
+              [
+                "persist-storage!"
+              ]
+            ]
+          ],
+          [
+            "repeat!",
+            "60",
+            "persist-storage!"
+          ],
+          [
+            "match",
+            [
+              "browser/storage-get",
+              [
+                "option:unwrap-or",
+                [
+                  "get",
+                  "config/site",
+                  ":storage-key"
+                ],
+                "|"
+              ]
+            ],
+            [
+              [
+                ":some",
+                "raw"
+              ],
+              [
+                "dispatch!",
+                [
+                  "::",
+                  ":hydrate-storage",
+                  [
+                    "parse-cirru-edn",
+                    "raw"
+                  ]
+                ]
+              ]
+            ],
+            [
+              [
+                ":none"
+              ],
+              "&unit"
+            ]
+          ],
+          [
+            "browser/add-event-listener!",
+            "|keydown",
+            [
+              "fn",
+              [
+                "event"
+              ],
+              [
+                "hint-fn",
+                [
+                  "{}",
+                  [
+                    ":args",
+                    [
+                      "[]",
+                      "'js-ffi.browser/EventHost"
+                    ]
+                  ],
+                  [
+                    ":return",
+                    "'Unit"
+                  ],
+                  [
+                    ":features",
+                    [
+                      "#{}",
+                      ":js-ffi"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "let",
+                [
+                  [
+                    "host",
+                    [
+                      "browser/keyboard-event-host",
+                      "event"
+                    ]
+                  ],
+                  [
+                    "key",
+                    [
+                      ".-key",
+                      "host"
+                    ]
+                  ],
+                  [
+                    "meta-key?",
+                    [
+                      ".-meta-key?",
+                      "host"
+                    ]
+                  ]
+                ],
+                [
+                  "cond",
+                  [
+                    [
+                      "and",
+                      "meta-key?",
+                      [
+                        "=",
+                        "|e",
+                        "key"
+                      ]
+                    ],
+                    [
+                      "dispatch!",
+                      [
+                        "::",
+                        ":toggle-result"
+                      ]
+                    ]
+                  ],
+                  [
+                    [
+                      "and",
+                      "meta-key?",
+                      [
+                        "=",
+                        "|k",
+                        "key"
+                      ]
+                    ],
+                    [
+                      "dispatch!",
+                      [
+                        "::",
+                        ":clear-text"
+                      ]
+                    ]
+                  ],
+                  [
+                    [
+                      "and",
+                      "meta-key?",
+                      [
+                        "=",
+                        "|i",
+                        "key"
+                      ]
+                    ],
+                    [
+                      "dispatch!",
+                      [
+                        "::",
+                        ":swap-text"
+                      ]
+                    ]
+                  ],
+                  [
+                    "true",
+                    "&unit"
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "println",
+            "|App started."
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.main/main!",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Unit"
+          ],
+          [
+            ":args",
+            [
+              "[]"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:44d10e1320ef2f50c5cb19008a6c8c6a",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defn",
+          "mount-target",
+          [],
+          [
+            "let",
+            [
+              [
+                "document-host",
+                [
+                  "js-cast",
+                  "js/document",
+                  "'respo.dom/DomDocument"
+                ]
+              ]
+            ],
+            [
+              "document-host",
+              ".query-selector",
+              "|.app"
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.main/mount-target",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":args",
+            [
+              "[]"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ],
+          [
+            ":return",
+            [
+              "::",
+              "'JsNullish",
+              "'respo.dom/DomElement"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:6d142435d58ca26e4906eb31b6536fc4",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defn",
+          "persist-storage!",
+          [],
+          [
+            "browser/storage-set!",
+            [
+              "option:unwrap-or",
+              [
+                "get",
+                "config/site",
+                ":storage-key"
+              ],
+              "|"
+            ],
+            [
+              "format-cirru-edn",
+              [
+                "&struct:to-map",
+                [
+                  ":store",
+                  "@*reel"
+                ]
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.main/persist-storage!",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Unit"
+          ],
+          [
+            ":args",
+            [
+              "[]"
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:9890cc8aad9ba5f7e23917036ffdfcf9",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defn",
+          "reload!",
+          [],
+          [
+            "if",
+            [
+              "js-nullish?",
+              "build-errors"
+            ],
+            [
+              "do",
+              [
+                "remove-watch!",
+                "*reel",
+                ":changes"
+              ],
+              [
+                "clear-cache!"
+              ],
+              [
+                "add-watch!",
+                "*reel",
+                ":changes",
+                [
+                  "fn",
+                  [
+                    "reel",
+                    "prev"
+                  ],
+                  [
+                    "hint-fn",
+                    [
+                      "{}",
+                      [
+                        ":args",
+                        [
+                          "[]",
+                          [
+                            "::",
+                            "'reel.typed/State",
+                            "'Enum",
+                            "'app.schema/StoreData"
+                          ],
+                          [
+                            "::",
+                            "'reel.typed/State",
+                            "'Enum",
+                            "'app.schema/StoreData"
+                          ]
+                        ]
+                      ],
+                      [
+                        ":return",
+                        "'Unit"
+                      ]
+                    ]
+                  ],
+                  [
+                    "render-app!"
+                  ]
+                ]
+              ],
+              [
+                "reset!",
+                "*reel",
+                [
+                  "typed-reel/refresh",
+                  "updater",
+                  "@*reel",
+                  "schema/store"
+                ]
+              ],
+              [
+                "hud!",
+                "|ok~",
+                "|Ok"
+              ]
+            ],
+            [
+              "hud!",
+              "|error",
+              "build-errors"
+            ]
+          ],
+          "&unit"
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.main/reload!",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Unit"
+          ],
+          [
+            ":args",
+            [
+              "[]"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:f785bce81042d6641aedb9f45d229c81",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defn",
+          "render-app!",
+          [],
+          [
+            "render!",
+            [
+              "mount-target"
+            ],
+            [
+              "comp-container",
+              "@*reel"
+            ],
+            "dispatch!"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.main/render-app!",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Unit"
+          ],
+          [
+            ":args",
+            [
+              "[]"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:01b7af7f48946764ce19be4d1f02368b",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defn",
+          "repeat!",
+          [
+            "duration",
+            "cb"
+          ],
+          [
+            "browser/set-timeout!",
+            [
+              "fn",
+              [],
+              [
+                "cb"
+              ],
+              [
+                "repeat!",
+                "duration",
+                "cb"
+              ]
+            ],
+            [
+              "*",
+              "1000",
+              "duration"
+            ]
+          ],
+          "&unit"
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.main/repeat!",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'Unit"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'Number",
+              [
+                "::",
+                "'Fn",
+                [
+                  "{}",
+                  [
+                    ":return",
+                    "'Unit"
+                  ],
+                  [
+                    ":args",
+                    [
+                      "[]"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            ":features",
+            [
+              "#{}",
+              ":js-ffi"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:fc0c530a5234342c25a2b910a894c529",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defstruct",
+          "DiffChunk",
+          [
+            ":value",
+            "'String"
+          ],
+          [
+            ":added",
+            [
+              "::",
+              "'Option",
+              "'Bool"
+            ]
+          ],
+          [
+            ":removed",
+            [
+              "::",
+              "'Option",
+              "'Bool"
+            ]
+          ],
+          [
+            ":count",
+            "'Number"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/DiffChunk",
+        "js_ffi": null,
+        "schema": "'StructDef",
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:e830b6492ee9e69e76df99ca26107741",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defstruct",
+          "StoreData",
+          [
+            ":states",
+            [
+              "::",
+              "'Map",
+              "'Tag",
+              "'Dynamic"
+            ]
+          ],
+          [
+            ":page",
+            "'Tag"
+          ],
+          [
+            ":sorted?",
+            "'Bool"
+          ],
+          [
+            ":show-result?",
+            "'Bool"
+          ],
+          [
+            ":by-word?",
+            "'Bool"
+          ],
+          [
+            ":old-text",
+            "'String"
+          ],
+          [
+            ":new-text",
+            "'String"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/StoreData",
+        "js_ffi": null,
+        "schema": "'StructDef",
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:23e0fc16994bf34875151e839aee6a90",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defn",
+          "normalize-store",
+          [
+            "raw"
+          ],
+          [
+            "hint-fn",
+            [
+              "{}",
+              [
+                ":args",
+                [
+                  "[]",
+                  "'Dynamic"
+                ]
+              ],
+              [
+                ":return",
+                "'app.schema/StoreData"
+              ]
+            ]
+          ],
+          [
+            "decode-map-as",
+            [
+              "if",
+              [
+                "struct?",
+                "raw"
+              ],
+              [
+                "&struct:to-map",
+                "raw"
+              ],
+              "raw"
+            ],
+            "'app.schema/StoreData"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/normalize-store",
+        "js_ffi": null,
+        "schema": null,
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:b9065b90ec55f6288bec1076c6e89f88",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "def",
+          "store",
+          [
+            "StoreData",
+            ":states",
+            [
+              "{}"
+            ],
+            ":page",
+            ":editor",
+            ":sorted?",
+            "false",
+            ":show-result?",
+            "false",
+            ":by-word?",
+            "false",
+            ":old-text",
+            "|",
+            ":new-text",
+            "|"
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.schema/store",
+        "js_ffi": null,
+        "schema": "'app.schema/StoreData",
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:e6b35df0da70bb4f3f056639330a3365",
+      "schema_version": 1
+    },
+    {
+      "command": "query.def",
+      "data": {
+        "code": [
+          "defn",
+          "updater",
+          [
+            "store",
+            "op",
+            "op-id",
+            "op-time"
+          ],
+          [
+            "match",
+            "op",
+            [
+              [
+                ":states",
+                "cursor",
+                "s"
+              ],
+              [
+                "assoc",
+                "store",
+                ":states",
+                [
+                  "decode-map-as",
+                  [
+                    "update-state-tree",
+                    [
+                      ":states",
+                      "store"
+                    ],
+                    [
+                      "decode-map-as",
+                      "cursor",
+                      [
+                        "::",
+                        "'List",
+                        "'Dynamic"
+                      ]
+                    ],
+                    "s"
+                  ],
+                  [
+                    "::",
+                    "'Map",
+                    "'Tag",
+                    "'Dynamic"
+                  ]
+                ]
+              ]
+            ],
+            [
+              [
+                ":write-old",
+                "d"
+              ],
+              [
+                "assoc",
+                "store",
+                ":old-text",
+                [
+                  "decode-map-as",
+                  "d",
+                  "'String"
+                ]
+              ]
+            ],
+            [
+              [
+                ":write-new",
+                "d"
+              ],
+              [
+                "assoc",
+                "store",
+                ":new-text",
+                [
+                  "decode-map-as",
+                  "d",
+                  "'String"
+                ]
+              ]
+            ],
+            [
+              [
+                ":hydrate-storage",
+                "d"
+              ],
+              [
+                "schema/normalize-store",
+                "d"
+              ]
+            ],
+            [
+              [
+                ":toggle-sorted"
+              ],
+              [
+                "update",
+                "store",
+                ":sorted?",
+                "not"
+              ]
+            ],
+            [
+              [
+                ":toggle-result"
+              ],
+              [
+                "update",
+                "store",
+                ":show-result?",
+                "not"
+              ]
+            ],
+            [
+              [
+                ":toggle-word"
+              ],
+              [
+                "update",
+                "store",
+                ":by-word?",
+                "not"
+              ]
+            ],
+            [
+              [
+                ":clear-text"
+              ],
+              [
+                "->",
+                "store",
+                [
+                  "assoc",
+                  ":old-text",
+                  "|"
+                ],
+                [
+                  "assoc",
+                  ":new-text",
+                  "|"
+                ],
+                [
+                  "assoc",
+                  ":show-result?",
+                  "false"
+                ]
+              ]
+            ],
+            [
+              [
+                ":swap-text"
+              ],
+              [
+                "->",
+                "store",
+                [
+                  "assoc",
+                  ":old-text",
+                  [
+                    ":new-text",
+                    "store"
+                  ]
+                ],
+                [
+                  "assoc",
+                  ":new-text",
+                  [
+                    ":old-text",
+                    "store"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "_",
+              [
+                "do",
+                [
+                  "eprintln",
+                  "|Unkown op:",
+                  "op"
+                ],
+                "store"
+              ]
+            ]
+          ]
+        ],
+        "doc": "",
+        "examples": [],
+        "ffi": null,
+        "ffi_edn": null,
+        "id": "app.updater/updater",
+        "js_ffi": null,
+        "schema": [
+          "{}",
+          [
+            ":kind",
+            ":fn"
+          ],
+          [
+            ":return",
+            "'app.schema/StoreData"
+          ],
+          [
+            ":args",
+            [
+              "[]",
+              "'app.schema/StoreData",
+              "'Enum",
+              "'String",
+              "'Number"
+            ]
+          ]
+        ],
+        "tags": [],
+        "tests": []
+      },
+      "diagnostics": [],
+      "revision": "md5:47a942f394f324c5838162c8ae5e5bb0",
+      "schema_version": 1
+    }
+  ],
+  "config": {
+    "schema_version": 1,
+    "command": "config.show",
+    "data": {
+      "package": "app",
+      "version": "0.1.3",
+      "selected_entry": null,
+      "entries": [
+        {
+          "name": "default",
+          "mode": "js",
+          "target": "browser",
+          "init_fn": "app.main/main!",
+          "reload_fn": "app.main/reload!",
+          "description": "",
+          "modules": [
+            "respo.calcit/",
+            "respo-ui.calcit/",
+            "reel.calcit/",
+            "js-ffi/"
+          ],
+          "type_slots": {},
+          "feature_policy": {}
+        }
+      ],
+      "verification_schema_version": 1,
+      "verification_profiles": []
+    },
+    "diagnostics": [],
+    "revision": "md5:7f6cccface68a0332a13aa1fad9a5e8b"
+  }
+}
