@@ -45,7 +45,9 @@ function walk(x,path,id){
 for(const d of expected.defs)d.code=walk(d.code,[],d.id);
 const checked=expected.defs.find(d=>d.id==='app.comp.container/comp-checked');
 const args=checked.schema.find(x=>Array.isArray(x)&&x[0]===':args')[1];assert.equal(args[3][2][2][1][1],"'respo.schema/RespoEvent");
-const oldSchema=structuredClone(checked.schema);args[3]=structuredClone(handler);
+const oldSchema=structuredClone(checked.schema);
+const canonicalDispatch=['::',"'Fn",['{}',[':rest',"'Dynamic"],[':return',"'Unit"],[':args',['[]',"'Dynamic"]]]];
+args[3]=['::',"'Fn",['{}',[':return',"'Unit"],[':args',['[]',structuredClone(event),canonicalDispatch]]]];
 ops.push(['edit','schema',checked.id,'--input-format','json-ast','--code',JSON.stringify(['::',"'Fn",['{}',...checked.schema.slice(1).filter(x=>x[0]!==':kind')]])]);counts.handlerSchema++;
 sites.push({id:checked.id,beforeSchema:oldSchema,afterSchema:checked.schema});
 const main=expected.defs.find(d=>d.id==='app.main/main!'),originalMain=before.defs.find(d=>d.id===main.id);
