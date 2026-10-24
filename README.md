@@ -8,11 +8,15 @@ http://r.tiye.me/Memkits/diffview/
 
 ### 使用者影响：正式 Calcit 0.30.1 配对
 
-CLI/runtime一起升级到正式 **0.30.1**，同步Reel0.6.41、UI0.8.0、Respo0.16.124
-及传递JS-FFI0.2.5、Router0.8.37。请重新安装完整依赖图、生成JS并刷新，勿混装旧alpha缓存。
-本次不改Snapshot、行/词差异、Sorted/Swap/Clear、快捷键或存档格式/key；旧Struct/Map恢复合同保留。
-删除all-defs已覆盖的重复namespace清单，完整strict、原六项业务回归和COS内置verify保留，
-不增加验证脚本、concurrently、预算或兼容强转。不改原前端/服务器路径；PR只预览，不部署生产。
+CLI/runtime 继续正式 **0.30.1**，同步精确正式 Reel 0.6.42、UI 0.8.1、Respo 0.16.126，
+及传递 JS-FFI 0.2.6、Router 0.8.38。请重新安装完整依赖图、生成 JS 并刷新，勿混装旧 alpha 缓存。
+启动改为先恢复存档成功，再首次渲染/注册保存，避免解析失败后被默认状态覆盖；不吞掉异常或清空原值。
+行/词差异、Sorted/Swap/Clear、快捷键或存档格式/key 不变；旧 Struct/Map 恢复合同及真实 HUD 保留。
+7 处 Option unwrap-or 改为方法，保留空字符串/false 默认值；7 个 DOM 回调补实际 EventHandler 合同，
+comp-checked 的处理器参数从错误的 RespoEvent Struct 改为真实 Map 事件/dispatch Fn 合同，不伪装为封闭业务 Op。
+19 处 CSS 长度/关键字按原渲染规则改为等价 String，不改变尺寸、颜色或布局。
+完整 strict、原六项业务回归和 COS 内置 verify 保留；不新增验证脚本、concurrently、预算、强转或测试框架。
+不改原前端/服务器路径；PR 只预览，不部署生产。正常刷新恢复不代表坏存档验收；进展见 [#46](https://github.com/Memkits/diffview/issues/46)。
 
 Use paired formal Calcit / `@calcit/procs` 0.30.1 and the canonical `calcit.cirru` / `deps.cirru` files.
 Retired `compact.cirru` and `package.cirru` snapshots are ignored and rejected
