@@ -6,7 +6,7 @@
     {} (:description |) (:init-fn 'app.main/main!) (:mode :js) (:reload-fn 'app.main/reload!) (:target :browser)
       :feature-policy $ {}
       :modules $ [] |respo.calcit/ |respo-ui.calcit/ |reel.calcit/ |js-ffi/
-      :type-slots $ {}
+      :type-slots $ {} $ :dispatch-op 'Dynamic
   :files $ {}
     'app.comp.container $ %{} 'FileEntry
       :defs $ {}
@@ -20,12 +20,11 @@
                 :style $ {} $ :cursor |pointer
               <> text css/font-fancy
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
-            :args $ [] 'Bool 'String $ :: 'Fn
-              {} (:return 'Unit)
-                :args $ [] (:: 'Map 'Tag 'Dynamic)
-                  :: 'Fn $ {} (:rest 'Dynamic) (:return 'Unit)
-                    :args $ [] 'Dynamic
+          :schema $ quote $ Fn Bool String
+            Fn (Map Tag Dynamic)
+              Fn Dynamic & Dynamic $ -> Unit
+              -> Unit
+            -> respo.schema/Component
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-container (reel)
             let
@@ -57,10 +56,9 @@
                         :value $ :old-text store
                         :placeholder "|Old text"
                         :on-input $ fn (e d!)
-                          hint-fn $ {} (:return 'Unit)
-                            :args $ [] (:: 'Map 'Tag 'Dynamic)
-                              :: 'Fn $ {} (:return 'Unit) (:rest 'Dynamic)
-                                :args $ [] 'Dynamic
+                          hint-fn $ Fn (Map Tag Dynamic)
+                            Fn Dynamic & Dynamic $ -> Unit
+                            -> Unit
                           d! $ :: :write-old $ .unwrap-or (get e :value) |
                         :spell-check false
                         :autofocus true
@@ -70,50 +68,45 @@
                         :value $ :new-text store
                         :placeholder "|New text"
                         :on-input $ fn (e d!)
-                          hint-fn $ {} (:return 'Unit)
-                            :args $ [] (:: 'Map 'Tag 'Dynamic)
-                              :: 'Fn $ {} (:return 'Unit) (:rest 'Dynamic)
-                                :args $ [] 'Dynamic
+                          hint-fn $ Fn (Map Tag Dynamic)
+                            Fn Dynamic & Dynamic $ -> Unit
+                            -> Unit
                           d! $ :: :write-new $ .unwrap-or (get e :value) |
                         :spellcheck false
                 when dev? $ comp-reel (>> states :reel) (reel-view/view-data reel) ({})
                 when dev? $ comp-inspect |Store store $ {} (:bottom |0px)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
-            :args $ [] $ :: 'reel.typed/State 'Enum 'app.schema/StoreData
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (reel.typed/State Enum app.schema/StoreData) (-> respo.schema/Component) (:features :js-ffi)
         'comp-diff-view $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-diff-view (changes by-word?)
             list->
               {} (:class-name css/flex)
                 :style $ {} (:padding-bottom |80px) (:overflow |auto)
-                  :line-height $ if by-word? |20px
+                  :line-height $ if by-word? |20px |
               -> changes $ map-indexed $ fn (idx chunk)
                 [] idx $ let
                     tok $ :value chunk
                   cond
                       .unwrap-or (:removed chunk) false
                       div $ {} (:inner-text tok)
-                        :class-name $ str-spaced style-line style-removed $ if by-word? style-word-mode
+                        :class-name $ if by-word? (str-spaced style-line style-removed style-word-mode) (str-spaced style-line style-removed)
                         :title $ str "|Removed " (:count chunk) "| chunks"
                     (.unwrap-or (:added chunk) false)
                       div $ {} (:inner-text tok)
-                        :class-name $ str-spaced style-line style-added $ if by-word? style-word-mode
+                        :class-name $ if by-word? (str-spaced style-line style-added style-word-mode) (str-spaced style-line style-added)
                         :title $ str "|Added " (:count chunk) "| chunks"
                     true $ div $ {} (:inner-text tok)
-                      :class-name $ str-spaced style-line style-no-change $ if by-word? style-word-mode
+                      :class-name $ if by-word? (str-spaced style-line style-no-change style-word-mode) (str-spaced style-line style-no-change)
                       ; :title $ str (:count chunk) "| chunks reversed"
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
-            :args $ [] (:: 'List 'app.schema/DiffChunk) 'Bool
+          :schema $ quote $ Fn (List app.schema/DiffChunk) Bool (-> respo.schema/Component)
         'comp-divider $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-divider ()
             div $ {} $ :style
               {} (:width |1px)
                 :background-color $ hsl 0 0 94
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
-            :args $ []
+          :schema $ quote $ Fn (-> respo.schema/Component)
         'comp-toolbar $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-toolbar (show-result? sorted? by-word?)
             div
@@ -124,44 +117,38 @@
               div
                 {} $ :class-name css/row-center
                 comp-checked show-result? "|Result?(⌘ e)" $ fn (e d!)
-                  hint-fn $ {} (:return 'Unit)
-                    :args $ [] (:: 'Map 'Tag 'Dynamic)
-                      :: 'Fn $ {} (:return 'Unit) (:rest 'Dynamic)
-                        :args $ [] 'Dynamic
+                  hint-fn $ Fn (Map Tag Dynamic)
+                    Fn Dynamic & Dynamic $ -> Unit
+                    -> Unit
                   d! $ :: :toggle-result
                 =< 16 nil
                 comp-checked sorted? |Sorted $ fn (e d!)
-                  hint-fn $ {} (:return 'Unit)
-                    :args $ [] (:: 'Map 'Tag 'Dynamic)
-                      :: 'Fn $ {} (:return 'Unit) (:rest 'Dynamic)
-                        :args $ [] 'Dynamic
+                  hint-fn $ Fn (Map Tag Dynamic)
+                    Fn Dynamic & Dynamic $ -> Unit
+                    -> Unit
                   d! $ :: :toggle-sorted
                 =< 16 nil
                 comp-checked by-word? |ByWord $ fn (e d!)
-                  hint-fn $ {} (:return 'Unit)
-                    :args $ [] (:: 'Map 'Tag 'Dynamic)
-                      :: 'Fn $ {} (:return 'Unit) (:rest 'Dynamic)
-                        :args $ [] 'Dynamic
+                  hint-fn $ Fn (Map Tag Dynamic)
+                    Fn Dynamic & Dynamic $ -> Unit
+                    -> Unit
                   d! $ :: :toggle-word
                 =< 16 nil
                 a $ {} (:class-name css/link) (:inner-text |Swap) (:title "|⌘ i")
                   :on-click $ fn (e d!)
-                    hint-fn $ {} (:return 'Unit)
-                      :args $ [] (:: 'Map 'Tag 'Dynamic)
-                        :: 'Fn $ {} (:return 'Unit) (:rest 'Dynamic)
-                          :args $ [] 'Dynamic
+                    hint-fn $ Fn (Map Tag Dynamic)
+                      Fn Dynamic & Dynamic $ -> Unit
+                      -> Unit
                     d! $ :: :swap-text
                 =< 16 nil
                 a $ {} (:class-name css/link) (:inner-text |Clear) (:title "|⌘ k")
                   :on-click $ fn (e d!)
-                    hint-fn $ {} (:return 'Unit)
-                      :args $ [] (:: 'Map 'Tag 'Dynamic)
-                        :: 'Fn $ {} (:return 'Unit) (:rest 'Dynamic)
-                          :args $ [] 'Dynamic
+                    hint-fn $ Fn (Map Tag Dynamic)
+                      Fn Dynamic & Dynamic $ -> Unit
+                      -> Unit
                     d! $ :: :clear-text
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
-            :args $ [] 'Bool 'Bool 'Bool
+          :schema $ quote $ Fn Bool Bool Bool (-> respo.schema/Component)
         'sort-by-line $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn sort-by-line (text)
             join-string
@@ -169,38 +156,37 @@
                 fn (a b) (&compare a b)
               , &newline
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'String
+          :schema $ quote $ Fn String (-> String)
         'style-added $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle style-added
             {} $ |& $ {}
               :background-color $ hsl 200 100 92
           :examples $ []
-          :schema $ :: 'String
+          :schema $ quote String
         'style-line $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle style-line
             {} $ |& $ {} (:line-height |24px) (:font-size |12px) (:font-family ui/font-code) (:margin |0px) (:padding "|0 8px") (:white-space |pre) (:overflow-x |auto)
           :examples $ []
-          :schema $ :: 'String
+          :schema $ quote String
         'style-no-change $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle style-no-change
             {} $ |& $ {}
               :color $ hsl 0 0 80
               :line-height |15px
           :examples $ []
-          :schema $ :: 'String
+          :schema $ quote String
         'style-removed $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle style-removed
             {} $ |& $ {}
               :background-color $ hsl 0 100 78
               :color |white
           :examples $ []
-          :schema $ :: 'String
+          :schema $ quote String
         'style-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle style-text
             {} $ |& $ {} (:font-family ui/font-code) (:line-height |20px) (:font-size |12px) (:white-space |pre) (:overflow |auto) (:border |none) (:padding "|8px 8px 80px 8px") (:resize |none)
           :examples $ []
-          :schema $ :: 'String
+          :schema $ quote String
         'style-toolbar $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle style-toolbar
             {} $ |& $ {}
@@ -208,12 +194,12 @@
               :line-height |32px
               :padding "|0 8px"
           :examples $ []
-          :schema $ :: 'String
+          :schema $ quote String
         'style-word-mode $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle style-word-mode
             {} $ |& $ {} (:display |inline) (:white-space |pre-wrap)
           :examples $ []
-          :schema $ :: 'String
+          :schema $ quote String
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.container
           :require
@@ -234,12 +220,12 @@
           :code $ quote $ def dev?
             = |dev $ .unwrap-or (get-env |mode) |release
           :examples $ []
-          :schema $ :: 'Bool
+          :schema $ quote Bool
         'site $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def site
             {} (:title |Diffview) (:storage-key |diffview)
           :examples $ []
-          :schema $ :: 'Map 'Tag 'String
+          :schema $ quote $ Map Tag String
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.config
     'app.main $ %{} 'FileEntry
@@ -247,7 +233,7 @@
         '*reel $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *reel (typed-reel/new-reel schema/store)
           :examples $ []
-          :schema $ :: 'Ref $ :: 'reel.typed/State 'Enum 'app.schema/StoreData
+          :schema $ quote $ Ref (reel.typed/State Enum app.schema/StoreData)
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             when config/dev? $ js/console.log |Dispatch: op
@@ -260,9 +246,7 @@
               raise "|Expected one operation enum"
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             if config/dev? $ load-console-formatter!
@@ -274,22 +258,15 @@
               (:none) &unit
             render-app!
             add-watch! *reel :changes $ fn (r p)
-              hint-fn $ {}
-                :args $ [] (:: 'reel.typed/State 'Enum 'app.schema/StoreData) (:: 'reel.typed/State 'Enum 'app.schema/StoreData)
-                :return 'Unit
+              hint-fn $ Fn (reel.typed/State Enum app.schema/StoreData) (reel.typed/State Enum app.schema/StoreData) (-> Unit)
               render-app!
             listen-devtools! |a dispatch!
             browser/add-event-listener! |beforeunload $ fn (event)
-              hint-fn $ {}
-                :args $ [] 'js-ffi.browser/EventHost
-                :return 'Unit
+              hint-fn $ Fn js-ffi.browser/EventHost $ -> Unit
               persist-storage!
             repeat! 60 persist-storage!
             browser/add-event-listener! |keydown $ fn (event)
-              hint-fn $ {}
-                :args $ [] 'js-ffi.browser/EventHost
-                :return 'Unit
-                :features $ #{} :js-ffi
+              hint-fn $ Fn js-ffi.browser/EventHost (-> Unit) (:features :js-ffi)
               let
                   host $ browser/keyboard-event-host event
                   key $ .-key host
@@ -304,50 +281,41 @@
                   true &unit
             println "|App started."
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'mount-target $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn mount-target ()
             let
                 document-host $ js-cast js/document 'respo.dom/DomDocument
               document-host .query-selector |.app
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ []
-            :features $ #{} :js-ffi
-            :return $ :: 'JsNullish 'respo.dom/DomElement
+          :schema $ quote $ Fn
+            -> $ JsNullish respo.dom/DomElement
+            :features :js-ffi
         'persist-storage! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn persist-storage! ()
             browser/storage-set!
               .unwrap-or (get config/site :storage-key) |
               format-cirru-edn $ &struct:to-map $ :store @*reel
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
             if (js-nullish? build-errors)
               do (remove-watch! *reel :changes) (clear-cache!)
                 add-watch! *reel :changes $ fn (reel prev)
-                  hint-fn $ {}
-                    :args $ [] (:: 'reel.typed/State 'Enum 'app.schema/StoreData) (:: 'reel.typed/State 'Enum 'app.schema/StoreData)
-                    :return 'Unit
+                  hint-fn $ Fn (reel.typed/State Enum app.schema/StoreData) (reel.typed/State Enum app.schema/StoreData) (-> Unit)
                   render-app!
                 reset! *reel $ typed-reel/refresh updater @*reel schema/store
                 hud! |ok~ |Ok
               hud! |error build-errors
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
+          :schema $ quote $ Fn (-> Unit)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
             render! (mount-target) (comp-container @*reel) dispatch!
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
+          :schema $ quote $ Fn (-> Unit)
         'repeat! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn repeat! (duration cb)
             browser/set-timeout!
@@ -355,11 +323,10 @@
               * 1000 duration
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Number $ :: 'Fn
-              {} (:return 'Unit)
-                :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number
+            Fn $ -> Unit
+            -> Unit
+            :features :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.main
           :require
@@ -378,14 +345,14 @@
       :defs $ {}
         'DiffChunk $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct DiffChunk (:value 'String)
-            :added $ :: 'Option 'Bool
-            :removed $ :: 'Option 'Bool
+            :added $ quote $ Option Bool
+            :removed $ quote $ Option Bool
             :count 'Number
           :examples $ []
-          :schema $ :: 'StructDef
+          :schema $ quote StructDef
         'StoreData $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct StoreData
-            :states $ :: 'Map 'Tag 'Dynamic
+            :states $ quote $ Map Tag Dynamic
             :page 'Tag
             :sorted? 'Bool
             :show-result? 'Bool
@@ -393,12 +360,10 @@
             :old-text 'String
             :new-text 'String
           :examples $ []
-          :schema $ :: 'StructDef
+          :schema $ quote StructDef
         'normalize-store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn normalize-store (raw)
-            hint-fn $ {}
-              :args $ [] 'Dynamic
-              :return 'app.schema/StoreData
+            hint-fn $ Fn Dynamic $ -> app.schema/StoreData
             decode-map-as
               if (struct? raw) (&struct:to-map raw) raw
               , 'app.schema/StoreData
@@ -407,7 +372,7 @@
           :code $ quote $ def store
             StoreData :states ({}) :page :editor :sorted? false :show-result? false :by-word? false :old-text | :new-text |
           :examples $ []
-          :schema $ :: 'app.schema/StoreData
+          :schema $ quote app.schema/StoreData
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.schema
     'app.updater $ %{} 'FileEntry
@@ -437,8 +402,7 @@
                   assoc :new-text $ :old-text store
               _ $ do (eprintln "|Unkown op:" op) store
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'app.schema/StoreData)
-            :args $ [] 'app.schema/StoreData 'Enum 'String 'Number
+          :schema $ quote $ Fn app.schema/StoreData Enum String Number (-> app.schema/StoreData)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater
           :require
