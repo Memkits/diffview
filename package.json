@@ -1,11 +1,11 @@
 {
   "name": "calcit-workflow",
   "version": "0.1.3",
-  "description": "ClojureScript workflow using Calcit Editor",
+  "description": "Online text diff viewer built with Calcit and Respo",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:mvc-works/calcit-workflow.git"
+    "url": "https://github.com/Memkits/diffview.git"
   },
   "author": "jiyinyiyong",
   "license": "MIT",
@@ -20,7 +20,7 @@
     "vite": "8.3.3"
   },
   "dependencies": {
-    "@calcit/procs": "0.30.1",
+    "@calcit/procs": "0.32.1",
     "diff": "^8.0.2"
   }
 }

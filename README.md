@@ -6,35 +6,53 @@ Diffview
 
 http://r.tiye.me/Memkits/diffview/
 
-### 使用者影响：正式 Calcit 0.30.1 配对
+### 使用者影响：正式 Calcit 0.32.1 配对
 
-CLI/runtime 继续正式 **0.30.1**，同步精确正式 Reel 0.6.42、UI 0.8.1、Respo 0.16.126，
-及传递 JS-FFI 0.2.6、Router 0.8.38。请重新安装完整依赖图、生成 JS 并刷新，勿混装旧 alpha 缓存。
-启动改为先恢复存档成功，再首次渲染/注册保存，避免解析失败后被默认状态覆盖；不吞掉异常或清空原值。
-行/词差异、Sorted/Swap/Clear、快捷键或存档格式/key 不变；旧 Struct/Map 恢复合同及真实 HUD 保留。
-7 处 Option unwrap-or 改为方法，保留空字符串/false 默认值；7 个 DOM 回调补实际 EventHandler 合同，
-comp-checked 的处理器参数从错误的 RespoEvent Struct 改为真实 Map 事件/dispatch Fn 合同，不伪装为封闭业务 Op。
-19 处 CSS 长度/关键字按原渲染规则改为等价 String，不改变尺寸、颜色或布局。
-完整 strict、原六项业务回归和 COS 内置 verify 保留；不新增验证脚本、concurrently、预算、强转或测试框架。
-删除旧 alpha 的 npm 预批准例外，正式包按普通安装策略验证，不新增正式包例外。
-不改原前端/服务器路径；PR 只预览，不部署生产。正常刷新恢复不代表坏存档验收；进展见 [#46](https://github.com/Memkits/diffview/issues/46)。
+CLI 与 `@calcit/procs` 更新到正式 **0.32.1**，需要重新安装依赖、生成 JS 并刷新。
+新类型标注由官方 CLI 格式化迁移。行/词差异、Sorted、Swap、Clear、原 ⌘ 快捷键、
+持久化格式及 `diffview` key 保持。启动仍先恢复存档，再渲染/注册保存；恢复失败仍报错，
+不吞异常或使用默认值覆盖输入。本轮没有执行新的坏存档故障验收，[#46](https://github.com/Memkits/diffview/issues/46) 的现场验证限制保留。
 
-Use paired formal Calcit / `@calcit/procs` 0.30.1 and the canonical `calcit.cirru` / `deps.cirru` files.
-Retired `compact.cirru` and `package.cirru` snapshots are ignored and rejected
-by CI. Dependencies are resolved with `caps --ci --strict`.
+差异展示组件的四处隐式 nil 分支改为明确结果：非词模式行高为空字符串，与原
+Respo style formatter 对 nil 的输出一致；三处 class 拼接按模式选择完整字符串，
+避免用空字符串替代 nil 后额外留下尾空格。其他 27 个定义的代码、schema、文档与测试元数据
+在官方规范化视图中一致；真实 `hud!` 保留，应用 unsafe 为零。
 
-Released COS action v1.2.0 validates HTML references and verifies public uploads;
-no extra CDN checker is needed. Existing external fonts and server paths remain
-unchanged.
-Each PR run uses its own preview prefix (`pr/<number>/<run-id>/<attempt>/`).
-Fork and Dependabot PRs retain all checks and builds but do not upload previews; ordinary Actions deployment secrets are not provided to Dependabot.
-Runs queue per PR and separately for production, without cancelling uploads.
-The six existing runtime checks cover diff behavior, not CDN verification.
+依赖使用精确正式 Reel 0.7.0、UI 0.9.0、Respo 0.17.1，传递 JS-FFI 0.2.9；
+UI 的 Router 0.9.0-alpha.4 沿用其已发布图，不以未配对版本替代。
+入口显式绑定既有开放 dispatch slot；原 Fn<Dynamic,Unit> 在 enum? 检查后
+处理 Reel 匿名控制或业务 Enum，受检 updater 和 StoreData 合同不变，不伪标为封闭名义 Op。
+新解析候选 npm 包版本的包龄为 60 分钟，正常复用 yarn.lock 不重新等待；没有例外。
+lock 仅更新 procs 版本和校验值，原 undici Dependabot PR 不混入本次迁移。
 
-`yarn build` compiles the default JS browser entry and builds once, using
-`VITE_BASE_URL` when set. `yarn dev` compiles initially and starts Vite; run
-`calcit calcit.cirru -w` in another terminal for live edits. CI keeps canonical,
-all-definition/strict checks, toolchain verification and the existing business tests.
+### 安装、检查与构建
+
+使用官方 Calcit 0.32.1、Caps 0.1.1、Node.js 24、Yarn 4.18.0：
+
+```sh
+caps --ci --strict
+corepack yarn install --immutable
+caps verify --toolchain
+calcit --check-only --all-defs
+calcit fix --workflow strict --verify
+corepack yarn build
+node --test scripts/upgrade.test.mjs
+```
+
+`yarn dev` 首次编译后启动 Vite；持续编译在另一终端运行 `calcit calcit.cirru -w`。
+项目源码为 `calcit.cirru`、`deps.cirru`，不提交 compact/package Snapshot 或 js-out/dist。
+使用官方结构化 CLI 查询/修改 Snapshot，不以文本解析、补丁或 diff 检查它。
+
+本轮完整检查 206/206（含依赖）、五 namespace 公开定义 28/28、strict workflow
+passed 且 diagnostics=[]、原六项 JS 业务回归、前端构建、Caps 五模块和工具链配对通过；
+deprecated-call、dynamic-method、unsafe 均为零。没有 definition-attached tests，不把空测试算通过。
+实际页面验证中文/emoji 输入、行/词模式切换、Sorted、Swap、⌘E 和正常刷新恢复，error/warn 为空。
+这不代表所有开放异构状态已消除 Dynamic。
+
+保留全部原 CI 与既有 SHA pins，不增加 checker、测试框架或 concurrently。
+COS v1.2.0 内置逐文件验证；同仓库 PR 仅独立 `pr/<number>/<run>/<attempt>/` 前端预览，
+fork/Dependabot 仍检查和构建但不上传。生产仍按原队列及 rsync 路径执行，外部字体地址不变。
+本轮只提交 PR，不合并或部署生产。
 
 ### 历史：0.30.1-alpha.5 源码迁移
 
