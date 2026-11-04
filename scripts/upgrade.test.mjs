@@ -9,6 +9,7 @@ import * as clt from "../js-out/calcit.core.mjs";
 import { updater } from "../js-out/app.updater.mjs";
 import { sort_by_line } from "../js-out/app.comp.container.mjs";
 import { make_string } from "../js-out/respo.render.html.mjs";
+import { event__GT_edn } from "../js-out/respo.util.format.mjs";
 import { child_pair_value, component_$q_, component_tree } from "../js-out/respo.util.detect.mjs";
 
 const t = init_tags(["states", "old-text", "new-text", "show-result?", "sorted?", "by-word?", "children", "event", "input", "click", "value", "data", "editor"]);
@@ -65,10 +66,10 @@ test("textarea callbacks dispatch one Enum and preserve missing-value fallback",
       assert.equal(args.length, 1);
       store = updater(store, args[0], "test", 0);
     };
-    handler(clt._$n__$M_(t.value, `text-${index}`), dispatch);
+    handler(event__GT_edn({type: "input", target: {value: `text-${index}`}}), dispatch);
     const field = index === 0 ? t["old-text"] : t["new-text"];
     assert.equal(read(store, field), `text-${index}`);
-    handler(clt._$n__$M_(), dispatch);
+    handler(event__GT_edn({type: "input", target: {}}), dispatch);
     assert.equal(read(store, field), "");
   }
 });
