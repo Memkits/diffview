@@ -21,8 +21,8 @@
               <> text css/font-fancy
           :examples $ []
           :schema $ quote $ Fn Bool String
-            Fn (Map Tag Dynamic)
-              Fn Dynamic & Dynamic $ -> Unit
+            Fn respo.schema/RespoEvent
+              Fn Enum $ -> Unit
               -> Unit
             -> respo.schema/Component
         'comp-container $ %{} 'CodeEntry (:doc |)
@@ -40,7 +40,7 @@
                       sort-by-line $ :old-text store
                       sort-by-line $ :new-text store
                     differ (:old-text store) (:new-text store)
-                  :: 'List 'app.schema/DiffChunk
+                  quote $ List app.schema/DiffChunk
               div
                 {} $ :class-name $ str-spaced css/global css/fullscreen css/column
                 comp-toolbar show-result? sorted? by-word?
@@ -56,10 +56,14 @@
                         :value $ :old-text store
                         :placeholder "|Old text"
                         :on-input $ fn (e d!)
-                          hint-fn $ Fn (Map Tag Dynamic)
-                            Fn Dynamic & Dynamic $ -> Unit
+                          hint-fn $ Fn respo.schema/RespoEvent
+                            Fn Enum $ -> Unit
                             -> Unit
-                          d! $ :: :write-old $ .unwrap-or (get e :value) |
+                          d! $ :: :write-old $ let
+                              value $ :value e
+                            if
+                              = :unit $ type-of value
+                              , | value
                         :spell-check false
                         :autofocus true
                       comp-divider
@@ -68,13 +72,21 @@
                         :value $ :new-text store
                         :placeholder "|New text"
                         :on-input $ fn (e d!)
-                          hint-fn $ Fn (Map Tag Dynamic)
-                            Fn Dynamic & Dynamic $ -> Unit
+                          hint-fn $ Fn respo.schema/RespoEvent
+                            Fn Enum $ -> Unit
                             -> Unit
-                          d! $ :: :write-new $ .unwrap-or (get e :value) |
+                          d! $ :: :write-new $ let
+                              value $ :value e
+                            if
+                              = :unit $ type-of value
+                              , | value
                         :spellcheck false
-                when dev? $ comp-reel (>> states :reel) (reel-view/view-data reel) ({})
-                when dev? $ comp-inspect |Store store $ {} (:bottom |0px)
+                if dev?
+                  Option :some $ comp-typed-reel (>> states :reel) reel $ {}
+                  Option :none
+                if dev?
+                  Option :some $ comp-inspect |Store store $ {} (:bottom |0px)
+                  Option :none
           :examples $ []
           :schema $ quote $ Fn (reel.typed/State Enum app.schema/StoreData) (-> respo.schema/Component) (:features :js-ffi)
         'comp-diff-view $ %{} 'CodeEntry (:doc |)
@@ -117,34 +129,34 @@
               div
                 {} $ :class-name css/row-center
                 comp-checked show-result? "|Result?(⌘ e)" $ fn (e d!)
-                  hint-fn $ Fn (Map Tag Dynamic)
-                    Fn Dynamic & Dynamic $ -> Unit
+                  hint-fn $ Fn respo.schema/RespoEvent
+                    Fn Enum $ -> Unit
                     -> Unit
                   d! $ :: :toggle-result
-                =< 16 nil
+                space-x 16
                 comp-checked sorted? |Sorted $ fn (e d!)
-                  hint-fn $ Fn (Map Tag Dynamic)
-                    Fn Dynamic & Dynamic $ -> Unit
+                  hint-fn $ Fn respo.schema/RespoEvent
+                    Fn Enum $ -> Unit
                     -> Unit
                   d! $ :: :toggle-sorted
-                =< 16 nil
+                space-x 16
                 comp-checked by-word? |ByWord $ fn (e d!)
-                  hint-fn $ Fn (Map Tag Dynamic)
-                    Fn Dynamic & Dynamic $ -> Unit
+                  hint-fn $ Fn respo.schema/RespoEvent
+                    Fn Enum $ -> Unit
                     -> Unit
                   d! $ :: :toggle-word
-                =< 16 nil
+                space-x 16
                 a $ {} (:class-name css/link) (:inner-text |Swap) (:title "|⌘ i")
                   :on-click $ fn (e d!)
-                    hint-fn $ Fn (Map Tag Dynamic)
-                      Fn Dynamic & Dynamic $ -> Unit
+                    hint-fn $ Fn respo.schema/RespoEvent
+                      Fn Enum $ -> Unit
                       -> Unit
                     d! $ :: :swap-text
-                =< 16 nil
+                space-x 16
                 a $ {} (:class-name css/link) (:inner-text |Clear) (:title "|⌘ k")
                   :on-click $ fn (e d!)
-                    hint-fn $ Fn (Map Tag Dynamic)
-                      Fn Dynamic & Dynamic $ -> Unit
+                    hint-fn $ Fn respo.schema/RespoEvent
+                      Fn Enum $ -> Unit
                       -> Unit
                     d! $ :: :clear-text
           :examples $ []
@@ -208,12 +220,11 @@
             respo-ui.css :as css
             respo-ui.core :as ui
             respo.core :refer $ defcomp >> list-> <> div button textarea pre span input a
-            respo.comp.space :refer $ =<
+            respo.comp.space :refer $ space-x
             respo.comp.inspect :refer $ comp-inspect
-            reel.comp.reel :refer $ comp-reel
+            reel.comp.reel :refer $ comp-typed-reel
             app.config :refer $ dev?
             |diff :as diff
-            reel.typed-compat :as reel-view
     'app.config $ %{} 'FileEntry
       :defs $ {}
         'dev? $ %{} 'CodeEntry (:doc |)
@@ -313,7 +324,7 @@
           :schema $ quote $ Fn (-> Unit)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
-            render! (mount-target) (comp-container @*reel) dispatch!
+            with-memo-frame $ fn () $ render! (mount-target) (comp-container @*reel) dispatch!
           :examples $ []
           :schema $ quote $ Fn (-> Unit)
         'repeat! $ %{} 'CodeEntry (:doc |)
@@ -341,33 +352,34 @@
             reel.typed :as typed-reel
             js-ffi.browser :as browser
             js-ffi.shared :as host
+            respo.memo :refer $ with-memo-frame
     'app.schema $ %{} 'FileEntry
       :defs $ {}
         'DiffChunk $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct DiffChunk (:value 'String)
+          :code $ quote $ defstruct DiffChunk (:value String)
             :added $ quote $ Option Bool
             :removed $ quote $ Option Bool
-            :count 'Number
+            :count Number
           :examples $ []
           :schema $ quote StructDef
         'StoreData $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct StoreData
             :states $ quote $ Map Tag Dynamic
-            :page 'Tag
-            :sorted? 'Bool
-            :show-result? 'Bool
-            :by-word? 'Bool
-            :old-text 'String
-            :new-text 'String
+            :page Tag
+            :sorted? Bool
+            :show-result? Bool
+            :by-word? Bool
+            :old-text String
+            :new-text String
           :examples $ []
           :schema $ quote StructDef
         'normalize-store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn normalize-store (raw)
-            hint-fn $ Fn Dynamic $ -> app.schema/StoreData
             decode-map-as
               if (struct? raw) (&struct:to-map raw) raw
               , 'app.schema/StoreData
           :examples $ []
+          :schema $ quote $ Fn Dynamic (-> app.schema/StoreData)
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
             StoreData :states ({}) :page :editor :sorted? false :show-result? false :by-word? false :old-text | :new-text |
@@ -383,9 +395,9 @@
               (:states cursor s)
                 assoc store :states $ decode-map-as
                   update-state-tree (:states store)
-                    decode-map-as cursor $ :: 'List 'Dynamic
+                    decode-map-as cursor $ quote $ List Dynamic
                     , s
-                  :: 'Map 'Tag 'Dynamic
+                  quote $ Map Tag Dynamic
               (:write-old d)
                 assoc store :old-text $ decode-map-as d 'String
               (:write-new d)

@@ -1,4 +1,3 @@
-
 Diffview
 ----
 
@@ -6,28 +5,38 @@ Diffview
 
 http://r.tiye.me/Memkits/diffview/
 
-### 使用者影响：正式 Calcit 0.32.1 配对
+### 使用者影响
 
-CLI 与 `@calcit/procs` 更新到正式 **0.32.1**，需要重新安装依赖、生成 JS 并刷新。
-新类型标注由官方 CLI 格式化迁移。行/词差异、Sorted、Swap、Clear、原 ⌘ 快捷键、
-持久化格式及 `diffview` key 保持。启动仍先恢复存档，再渲染/注册保存；恢复失败仍报错，
-不吞异常或使用默认值覆盖输入。本轮没有执行新的坏存档故障验收，[#46](https://github.com/Memkits/diffview/issues/46) 的现场验证限制保留。
+CLI 与 `@calcit/procs` 配对升级到正式 **0.34.2**，需要重新安装完整模块图、
+生成 JS 并完整刷新，不能跨工具链热重载旧 Reel。依赖使用正式 Reel **0.9.0**、
+UI **0.14.1**、Respo **0.19.2**、JS-FFI **0.2.10**，传递 Router **0.11.2**。
+不使用 main/hash 或 alpha，不关闭 Caps strict 解决冲突。
 
-差异展示组件的四处隐式 nil 分支改为明确结果：非词模式行高为空字符串，与原
-Respo style formatter 对 nil 的输出一致；三处 class 拼接按模式选择完整字符串，
-避免用空字符串替代 nil 后额外留下尾空格。其他 27 个定义的代码、schema、文档与测试元数据
-在官方规范化视图中一致；真实 `hud!` 保留，应用 unsafe 为零。
+行/词差异、Sorted、Swap、Clear、原 ⌘E/⌘I/⌘K、存储 key `diffview` 和 Map 存档
+保持。恢复仍先于 render/watch、beforeunload 和 60 秒保存注册；失败保留原值，
+不吞异常或用默认状态覆盖。真实 `hud!` 的页面错误展示及原服务器路径保持。
 
-依赖使用精确正式 Reel 0.7.0、UI 0.9.0、Respo 0.17.1，传递 JS-FFI 0.2.9；
-UI 的 Router 0.9.0-alpha.4 沿用其已发布图，不以未配对版本替代。
-入口显式绑定既有开放 dispatch slot；原 Fn<Dynamic,Unit> 在 enum? 检查后
-处理 Reel 匿名控制或业务 Enum，受检 updater 和 StoreData 合同不变，不伪标为封闭名义 Op。
-新解析候选 npm 包版本的包龄为 60 分钟，正常复用 yarn.lock 不重新等待；没有例外。
-lock 仅更新 procs 版本和校验值，原 undici Dependabot PR 不混入本次迁移。
+七个 DOM 回调采用 RespoEvent 与单个 Enum 派发。两个文本输入直接读 Struct 字段，
+缺失宿主 value（JS undefined）按原缺失值合同回退为空串；显式 null/false/0 等非法
+文本仍由原 String decoder 拒绝，不在失败时写入状态。旧 Map 事件夹具改用 Respo
+公开 event→EDN 适配，原六项测试及全部断言保留。
 
-### 安装、检查与构建
+已有 DiffChunk、StoreData 和 `Map Tag String` site 配置保持，不新增无实际封闭模型
+可对应的 union。存档入口仍接受原 Map/Struct，通过原 decoder 构造本地 StoreData；
+原 inline hint 移到公开 schema，不再把这个函数显示为 untyped。Reel 仍接受原业务
+Enum/匿名控制；开放 dispatch 和异构状态保留真实边界，不宣称 Dynamic 债务清零。
 
-使用官方 Calcit 0.32.1、Caps 0.1.1、Node.js 24、Yarn 4.18.0：
+根组件构建与 render! 同处 managed memo frame。开发 Reel 直接使用 typed State，
+两个开发工具条件子节点采用 Option，四处 spacer 保持宽 16。官方同版本格式器/
+query 比对 28 个原定义：四个 code 视图改变（含一处纯类型 hint 移位）、两个 schema、
+两个 namespace import；其余代码、schema、文档、附带测试/示例和 FFI 元数据不变。
+
+### 安装与原门禁
+
+使用 Calcit 0.34.2、Caps 0.1.1、Node.js 24、Yarn 4.18.0。
+Caps 独立安装，见 [官方说明](https://github.com/calcit-lang/caps)；Corepack/Yarn 不会安装它。
+新解析 npm 包保留 60 分钟年龄门禁，无单包例外。lock 只更新 procs 配对；已有
+undici Dependabot #48 单独保留。
 
 ```sh
 caps --ci --strict
@@ -39,43 +48,30 @@ corepack yarn build
 node --test scripts/upgrade.test.mjs
 ```
 
-`yarn dev` 首次编译后启动 Vite；持续编译在另一终端运行 `calcit calcit.cirru -w`。
-项目源码为 `calcit.cirru`、`deps.cirru`，不提交 compact/package Snapshot 或 js-out/dist。
-使用官方结构化 CLI 查询/修改 Snapshot，不以文本解析、补丁或 diff 检查它。
+`yarn dev` 先编译再启动 Vite；持续编译在另一终端运行 `calcit -w`，无需 concurrently。
+源码只维护 `calcit.cirru` / `deps.cirru`，不恢复 compact/package，不提交 js-out/dist。
+Snapshot 使用官方 query/tree/edit 与 revision 事务，不用文本补丁或自行解析。
 
-本轮完整检查 206/206（含依赖）、五 namespace 公开定义 28/28、strict workflow
-passed 且 diagnostics=[]、原六项 JS 业务回归、前端构建、Caps 五模块和工具链配对通过；
-deprecated-call、dynamic-method、unsafe 均为零。没有 definition-attached tests，不把空测试算通过。
-实际页面验证中文/emoji 输入、行/词模式切换、Sorted、Swap、⌘E 和正常刷新恢复，error/warn 为空。
-这不代表所有开放异构状态已消除 Dynamic。
+保留原 canonical、全定义、完整 strict、公开定义及原六项 Node 业务回归。
+本轮正式五模块 Caps strict/toolchain、Yarn immutable、全部定义、28 个公开定义、
+完整 strict（diagnostics=[]）、原六项回归与 JS/Vite 构建通过；deprecated-call、
+dynamic-method 为 0。没有 definition-attached tests，不把空测试称为通过。
 
-保留全部原 CI 与既有 SHA pins，不增加 checker、测试框架或 concurrently。
-COS v1.2.0 内置逐文件验证；同仓库 PR 仅独立 `pr/<number>/<run>/<attempt>/` 前端预览，
-fork/Dependabot 仍检查和构建但不上传。生产仍按原队列及 rsync 路径执行，外部字体地址不变。
-本轮只提交 PR，不合并或部署生产。
+普通可见 Chrome 在独立回环来源使用合成中文/emoji、多行文本，实际验证行/词模式、
+Sorted 的重排等价、Swap、Clear、⌘快捷键及刷新恢复，无应用 pageerror。
+另在两个全新回环来源通过可见夹具分别写入坏 EDN 与合法 EDN/错误 StoreData，
+两次均检查启动失败、原 60 秒保存周期、离页和刷新后原文不变；只用合成数据，
+自有浏览器/服务器已关闭。此证据补充 [#46](https://github.com/Memkits/diffview/issues/46)，
+不代表生产部署；精确远端 CI/comments 继续跟进。
 
-### 历史：0.30.1-alpha.5 源码迁移
-
-本轮保留行/词差异、Sorted、Swap、Clear、原 ⌘ 快捷键及存储 key。旧 Struct
-与 Map 存档均经过检查恢复；新存档以同字段 Map 保存，不包含 Reel 调试历史。
-预览 COS、生产 CDN 和原服务器路径不变，仍只使用 action 自带上传校验。
-
-该历史迁移使用alpha.5配对，Respo0.16.122、Reel0.6.39、UI0.7.41模块图；
-当前正式图见本文开头，以下历史结果不冒充本轮验收。
-业务 StoreData 配合 Reel `State<Enum,StoreData>`，不再强转 Reel store。
-文本和组件游标在写入前检查，DOM、键盘及存储使用真实宿主边界。
-Ref watcher 和 join-string 使用当前写法。
-
-CI 增加 all-defs 与完整 strict，并保留原五 namespace 公开检查和原六项 JS
-业务回归。测试仅迁移 Reel/ChildPair 读取方式，不增测试套件、checker 或基线。
-本地 206/206 定义、28/28 公开定义、六项回归及生产前缀构建通过；真实浏览器
-验收输入、行/词差异、Sorted、Swap、⌘E 与刷新恢复。
-应用源码 unsafe/assert-type 为零，但入站 dispatcher 与旧存档仍是开放数据边界，
-异构组件状态也不应被声称全类型化。独立 CI 的最新结果见迁移 PR。
+COS 仅 dist，使用 action v1.2.0 内置 verify；同仓库 PR 只上传独立
+`pr/<number>/<run>/<attempt>/` 前端预览，fork/Dependabot 只检查和构建。
+原生产队列、SHA pins、字体地址与 rsync 路径保持。本 PR 不合并或部署生产。
+不增加 checker、测试框架、迁移脚本、类型预算或编译器 fix/proof。
 
 ### Workflow
 
-Workflow https://github.com/calcit-lang/respo-calcit-workflow
+https://github.com/calcit-lang/respo-calcit-workflow
 
 ### License
 
