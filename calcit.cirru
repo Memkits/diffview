@@ -6,7 +6,7 @@
     {} (:description |) (:init-fn 'app.main/main!) (:mode :js) (:reload-fn 'app.main/reload!) (:target :browser)
       :feature-policy $ {}
       :modules $ [] |respo.calcit/ |respo-ui.calcit/ |reel.calcit/ |js-ffi/
-      :type-slots $ {} $ :dispatch-op 'Dynamic
+      :type-slots $ {} $ :dispatch-op |app.schema/DispatchOp
   :files $ {}
     'app.comp.container $ %{} 'FileEntry
       :defs $ {}
@@ -40,7 +40,7 @@
                       sort-by-line $ :old-text store
                       sort-by-line $ :new-text store
                     differ (:old-text store) (:new-text store)
-                  quote $ List app.schema/DiffChunk
+                  List app.schema/DiffChunk
               div
                 {} $ :class-name $ str-spaced css/global css/fullscreen css/column
                 comp-toolbar show-result? sorted? by-word?
@@ -57,7 +57,7 @@
                         :placeholder "|Old text"
                         :on-input $ fn (e d!)
                           hint-fn $ Fn respo.schema/RespoEvent
-                            Fn Enum $ -> Unit
+                            Fn AnyEnum $ -> Unit
                             -> Unit
                           d! $ :: :write-old $ let
                               value $ :value e
@@ -73,7 +73,7 @@
                         :placeholder "|New text"
                         :on-input $ fn (e d!)
                           hint-fn $ Fn respo.schema/RespoEvent
-                            Fn Enum $ -> Unit
+                            Fn AnyEnum $ -> Unit
                             -> Unit
                           d! $ :: :write-new $ let
                               value $ :value e
@@ -88,7 +88,7 @@
                   Option :some $ comp-inspect |Store store $ {} (:bottom |0px)
                   Option :none
           :examples $ []
-          :schema $ quote $ Fn (reel.typed/State Enum app.schema/StoreData) (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn (reel.typed/State app.schema/Op app.schema/StoreData) (-> respo.schema/Component) (:features :js-ffi)
         'comp-diff-view $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-diff-view (changes by-word?)
             list->
@@ -130,33 +130,33 @@
                 {} $ :class-name css/row-center
                 comp-checked show-result? "|Result?(⌘ e)" $ fn (e d!)
                   hint-fn $ Fn respo.schema/RespoEvent
-                    Fn Enum $ -> Unit
+                    Fn AnyEnum $ -> Unit
                     -> Unit
                   d! $ :: :toggle-result
                 space-x 16
                 comp-checked sorted? |Sorted $ fn (e d!)
                   hint-fn $ Fn respo.schema/RespoEvent
-                    Fn Enum $ -> Unit
+                    Fn AnyEnum $ -> Unit
                     -> Unit
                   d! $ :: :toggle-sorted
                 space-x 16
                 comp-checked by-word? |ByWord $ fn (e d!)
                   hint-fn $ Fn respo.schema/RespoEvent
-                    Fn Enum $ -> Unit
+                    Fn AnyEnum $ -> Unit
                     -> Unit
                   d! $ :: :toggle-word
                 space-x 16
                 a $ {} (:class-name css/link) (:inner-text |Swap) (:title "|⌘ i")
                   :on-click $ fn (e d!)
                     hint-fn $ Fn respo.schema/RespoEvent
-                      Fn Enum $ -> Unit
+                      Fn AnyEnum $ -> Unit
                       -> Unit
                     d! $ :: :swap-text
                 space-x 16
                 a $ {} (:class-name css/link) (:inner-text |Clear) (:title "|⌘ k")
                   :on-click $ fn (e d!)
                     hint-fn $ Fn respo.schema/RespoEvent
-                      Fn Enum $ -> Unit
+                      Fn AnyEnum $ -> Unit
                       -> Unit
                     d! $ :: :clear-text
           :examples $ []
@@ -244,20 +244,18 @@
         '*reel $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *reel (typed-reel/new-reel schema/store)
           :examples $ []
-          :schema $ quote $ Ref (reel.typed/State Enum app.schema/StoreData)
+          :schema $ quote $ Ref (reel.typed/State app.schema/Op app.schema/StoreData)
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             when config/dev? $ js/console.log |Dispatch: op
-            if (enum? op)
-              match (typed-reel/decode-control op)
-                (:some control)
-                  reset! *reel $ typed-reel/apply-control updater @*reel control
-                (:none)
-                  reset! *reel $ typed-reel/record-op updater @*reel op (generate-id!) (host/now-ms)
-              raise "|Expected one operation enum"
+            match (typed-reel/decode-control op)
+              (:some control)
+                reset! *reel $ typed-reel/apply-control updater @*reel control
+              (:none)
+                reset! *reel $ typed-reel/record-op updater @*reel (schema/decode-op op) (generate-id!) (host/now-ms)
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn AnyEnum (-> Unit) (:features :js-ffi)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             if config/dev? $ load-console-formatter!
@@ -269,7 +267,7 @@
               (:none) &unit
             render-app!
             add-watch! *reel :changes $ fn (r p)
-              hint-fn $ Fn (reel.typed/State Enum app.schema/StoreData) (reel.typed/State Enum app.schema/StoreData) (-> Unit)
+              hint-fn $ Fn (reel.typed/State app.schema/Op app.schema/StoreData) (reel.typed/State app.schema/Op app.schema/StoreData) (-> Unit)
               render-app!
             listen-devtools! |a dispatch!
             browser/add-event-listener! |beforeunload $ fn (event)
@@ -314,7 +312,7 @@
             if (js-nullish? build-errors)
               do (remove-watch! *reel :changes) (clear-cache!)
                 add-watch! *reel :changes $ fn (reel prev)
-                  hint-fn $ Fn (reel.typed/State Enum app.schema/StoreData) (reel.typed/State Enum app.schema/StoreData) (-> Unit)
+                  hint-fn $ Fn (reel.typed/State app.schema/Op app.schema/StoreData) (reel.typed/State app.schema/Op app.schema/StoreData) (-> Unit)
                   render-app!
                 reset! *reel $ typed-reel/refresh updater @*reel schema/store
                 hud! |ok~ |Ok
@@ -357,14 +355,32 @@
       :defs $ {}
         'DiffChunk $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct DiffChunk (:value String)
-            :added $ quote $ Option Bool
-            :removed $ quote $ Option Bool
+            :added $ Option Bool
+            :removed $ Option Bool
             :count Number
           :examples $ []
           :schema $ quote StructDef
+        'DispatchOp $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ def DispatchOp (:: :unhandled)
+          :examples $ []
+          :schema $ quote AnyEnum
+        'Op $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defenum Op
+            :states (List respo.schema/CoordKey) Dynamic
+            :write-old String
+            :write-new String
+            :hydrate-storage app.schema/StoreData
+            :toggle-sorted
+            :toggle-result
+            :toggle-word
+            :clear-text
+            :swap-text
+            :unknown AnyEnum
+          :examples $ []
+          :schema $ quote EnumDef
         'StoreData $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct StoreData
-            :states $ quote $ Map Tag Dynamic
+            :states $ Map Tag Dynamic
             :page Tag
             :sorted? Bool
             :show-result? Bool
@@ -373,6 +389,27 @@
             :new-text String
           :examples $ []
           :schema $ quote StructDef
+        'decode-op $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn decode-op (raw)
+            match raw
+              (:states cursor data)
+                Op :states
+                  decode-map-as cursor $ List respo.schema/CoordKey
+                  , data
+              (:write-old text)
+                Op :write-old $ decode-map-as text String
+              (:write-new text)
+                Op :write-new $ decode-map-as text String
+              (:hydrate-storage data)
+                Op :hydrate-storage $ normalize-store data
+              (:toggle-sorted) (Op :toggle-sorted)
+              (:toggle-result) (Op :toggle-result)
+              (:toggle-word) (Op :toggle-word)
+              (:clear-text) (Op :clear-text)
+              (:swap-text) (Op :swap-text)
+              _ $ Op :unknown raw
+          :examples $ []
+          :schema $ quote $ Fn AnyEnum (-> app.schema/Op)
         'normalize-store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn normalize-store (raw)
             decode-map-as
@@ -394,15 +431,11 @@
             match op
               (:states cursor s)
                 assoc store :states $ decode-map-as
-                  update-state-tree (:states store)
-                    decode-map-as cursor $ quote $ List Dynamic
-                    , s
-                  quote $ Map Tag Dynamic
-              (:write-old d)
-                assoc store :old-text $ decode-map-as d 'String
-              (:write-new d)
-                assoc store :new-text $ decode-map-as d 'String
-              (:hydrate-storage d) (schema/normalize-store d)
+                  update-state-tree (:states store) cursor s
+                  Map Tag Dynamic
+              (:write-old d) (assoc store :old-text d)
+              (:write-new d) (assoc store :new-text d)
+              (:hydrate-storage d) d
               (:toggle-sorted) (update store :sorted? not)
               (:toggle-result) (update store :show-result? not)
               (:toggle-word) (update store :by-word? not)
@@ -412,9 +445,10 @@
                 -> store
                   assoc :old-text $ :new-text store
                   assoc :new-text $ :old-text store
-              _ $ do (eprintln "|Unkown op:" op) store
+              (:unknown raw)
+                do (eprintln "|Unknown op:" raw) store
           :examples $ []
-          :schema $ quote $ Fn app.schema/StoreData Enum String Number (-> app.schema/StoreData)
+          :schema $ quote $ Fn app.schema/StoreData app.schema/Op String Number (-> app.schema/StoreData)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater
           :require
