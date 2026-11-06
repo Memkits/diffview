@@ -7,9 +7,9 @@ http://r.tiye.me/Memkits/diffview/
 
 ### 使用者影响
 
-CLI 与 `@calcit/procs` 配对升级到正式 **0.34.2**，需要重新安装完整模块图、
-生成 JS 并完整刷新，不能跨工具链热重载旧 Reel。依赖使用正式 Reel **0.9.0**、
-UI **0.14.1**、Respo **0.19.2**、JS-FFI **0.2.10**，传递 Router **0.11.2**。
+CLI 与 `@calcit/procs` 配对升级到正式 **0.35.1**，需要重新安装完整模块图、
+生成 JS 并完整刷新，不能跨工具链热重载旧 Reel。依赖使用正式 Reel **0.9.2**、
+UI **0.15.1**、Respo **0.19.4**、JS-FFI **0.2.13**，传递 Router **0.12.1**。
 不使用 main/hash 或 alpha，不关闭 Caps strict 解决冲突。
 
 行/词差异、Sorted、Swap、Clear、原 ⌘E/⌘I/⌘K、存储 key `diffview` 和 Map 存档
@@ -21,19 +21,17 @@ UI **0.14.1**、Respo **0.19.2**、JS-FFI **0.2.10**，传递 Router **0.11.2**�
 文本仍由原 String decoder 拒绝，不在失败时写入状态。旧 Map 事件夹具改用 Respo
 公开 event→EDN 适配，原六项测试及全部断言保留。
 
-已有 DiffChunk、StoreData 和 `Map Tag String` site 配置保持，不新增无实际封闭模型
-可对应的 union。存档入口仍接受原 Map/Struct，通过原 decoder 构造本地 StoreData；
-原 inline hint 移到公开 schema，不再把这个函数显示为 untyped。Reel 仍接受原业务
-Enum/匿名控制；开放 dispatch 和异构状态保留真实边界，不宣称 Dynamic 债务清零。
+DiffChunk、StoreData 和 `Map Tag String` site 配置沿用。存档入口接受原 Map/Struct，
+通过原 decoder 构造本地 StoreData。派发入口接收 Respo 与 Reel 的匿名枚举，
+校验并转换为具名 `Op` 再写入 Reel。状态坐标使用 Respo 的 `CoordKey` union，
+状态节点载荷继续接受异构数据。
 
 根组件构建与 render! 同处 managed memo frame。开发 Reel 直接使用 typed State，
-两个开发工具条件子节点采用 Option，四处 spacer 保持宽 16。官方同版本格式器/
-query 比对 28 个原定义：四个 code 视图改变（含一处纯类型 hint 移位）、两个 schema、
-两个 namespace import；其余代码、schema、文档、附带测试/示例和 FFI 元数据不变。
+两个开发工具条件子节点采用 Option，四处 spacer 保持宽 16。
 
 ### 安装与原门禁
 
-使用 Calcit 0.34.2、Caps 0.1.1、Node.js 24、Yarn 4.18.0。
+使用 Calcit 0.35.1、Caps 0.1.1、Node.js 24、Yarn 4.18.0。
 Caps 独立安装，见 [官方说明](https://github.com/calcit-lang/caps)；Corepack/Yarn 不会安装它。
 新解析 npm 包保留 60 分钟年龄门禁，无单包例外。lock 只更新 procs 配对；已有
 undici Dependabot #48 单独保留。
@@ -53,11 +51,10 @@ node --test scripts/upgrade.test.mjs
 Snapshot 使用官方 query/tree/edit 与 revision 事务，不用文本补丁或自行解析。
 
 保留原 canonical、全定义、完整 strict、公开定义及原六项 Node 业务回归。
-本轮正式五模块 Caps strict/toolchain、Yarn immutable、全部定义、28 个公开定义、
-完整 strict（diagnostics=[]）、原六项回归与 JS/Vite 构建通过；deprecated-call、
-dynamic-method 为 0。没有 definition-attached tests，不把空测试称为通过。
+0.35.1 的 Caps strict/toolchain、Yarn immutable、224 个完整定义、31 个公开定义、
+完整 strict、原六项回归与 JS/Vite 构建通过。
 
-普通可见 Chrome 在独立回环来源使用合成中文/emoji、多行文本，实际验证行/词模式、
+此前 0.34.2 在普通 Chrome 的独立回环来源使用合成中文/emoji、多行文本，实际验证行/词模式、
 Sorted 的重排等价、Swap、Clear、⌘快捷键及刷新恢复，无应用 pageerror。
 另在两个全新回环来源通过可见夹具分别写入坏 EDN 与合法 EDN/错误 StoreData，
 两次均检查启动失败、原 60 秒保存周期、离页和刷新后原文不变；只用合成数据，

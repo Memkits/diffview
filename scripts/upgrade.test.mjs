@@ -3,34 +3,29 @@ import test from "node:test";
 
 import { assoc, init_tags } from "../js-out/calcit.core.mjs";
 import { comp_container } from "../js-out/app.comp.container.mjs";
-import { store as defaultStore } from "../js-out/app.schema.mjs";
+import { decode_op, store as defaultStore } from "../js-out/app.schema.mjs";
 import { new_reel } from "../js-out/reel.typed.mjs";
 import * as clt from "../js-out/calcit.core.mjs";
 import { updater } from "../js-out/app.updater.mjs";
 import { sort_by_line } from "../js-out/app.comp.container.mjs";
 import { make_string } from "../js-out/respo.render.html.mjs";
 import { event__GT_edn } from "../js-out/respo.util.format.mjs";
-import { child_pair_value, component_$q_, component_tree } from "../js-out/respo.util.detect.mjs";
+import { as_element, child_pair_value, component_$q_, component_tree, element_children, element_event } from "../js-out/respo.util.detect.mjs";
 
-const t = init_tags(["states", "old-text", "new-text", "show-result?", "sorted?", "by-word?", "children", "event", "input", "click", "value", "data", "editor"]);
+const t = init_tags(["states", "old-text", "new-text", "show-result?", "sorted?", "by-word?", "input", "click", "value", "data", "editor"]);
 const unwrap = clt.option_$o_unwrap;
 const read = (value, key) => unwrap(clt.get(value, key));
 const op = (name, ...args) => clt._$o__$o_(init_tags([name])[name], ...args);
-const apply = (store, name, ...args) => updater(store, op(name, ...args), "test", 0);
+const apply = (store, name, ...args) => updater(store, decode_op(op(name, ...args)), "test", 0);
 const render = (store) => comp_container(new_reel(store));
 
 function handlers(node, kind) {
   if (component_$q_(node)) return handlers(unwrap(component_tree(node)), kind);
+  const element = as_element(node);
   const result = [];
-  const events = clt.get(node, t.event);
-  if (clt.option_$o_some_$q_(events)) {
-    const handler = clt.get(unwrap(events), kind);
-    if (clt.option_$o_some_$q_(handler)) result.push(unwrap(handler));
-  }
-  const children = clt.get(node, t.children);
-  if (clt.option_$o_some_$q_(children)) {
-    for (const pair of unwrap(children).toArray()) result.push(...handlers(child_pair_value(pair), kind));
-  }
+  const handler = clt.get(element_event(element), kind);
+  if (clt.option_$o_some_$q_(handler)) result.push(unwrap(handler));
+  for (const pair of element_children(element).toArray()) result.push(...handlers(child_pair_value(pair), kind));
   return result;
 }
 
@@ -64,7 +59,7 @@ test("textarea callbacks dispatch one Enum and preserve missing-value fallback",
     let store = defaultStore;
     const dispatch = (...args) => {
       assert.equal(args.length, 1);
-      store = updater(store, args[0], "test", 0);
+      store = updater(store, decode_op(args[0]), "test", 0);
     };
     handler(event__GT_edn({type: "input", target: {value: `text-${index}`}}), dispatch);
     const field = index === 0 ? t["old-text"] : t["new-text"];
