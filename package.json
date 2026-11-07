@@ -1,6 +1,6 @@
 {
   "name": "calcit-workflow",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Online text diff viewer built with Calcit and Respo",
   "main": "index.js",
   "repository": {
@@ -20,7 +20,7 @@
     "vite": "8.3.3"
   },
   "dependencies": {
-    "@calcit/procs": "0.35.1",
+    "@calcit/procs": "0.37.0",
     "diff": "^8.0.2"
   }
 }
