@@ -7,7 +7,7 @@ http://r.tiye.me/Memkits/diffview/
 
 ### 使用者影响
 
-CLI 与 `@calcit/procs` 配对升级到正式 **0.37.0**，需要重新安装完整模块图、
+CLI 与 `@calcit/procs` 配对升级到正式 **0.38.0**，需要重新安装完整模块图、
 生成 JS 并完整刷新，不能跨工具链热重载旧 Reel。依赖使用正式 Reel **0.10.0**、
 UI **0.15.2**、Respo **0.19.5**、JS-FFI **0.2.13**，传递 Router **0.12.2**。
 不使用 main/hash 或 alpha，不关闭 Caps strict 解决冲突。
@@ -23,7 +23,7 @@ UI **0.15.2**、Respo **0.19.5**、JS-FFI **0.2.13**，传递 Router **0.12.2**�
 
 DiffChunk、StoreData 和 `Map Tag String` site 配置沿用。存档入口接受原 Map/Struct，
 通过原 decoder 构造本地 StoreData。应用事件构造具名 `Op` 后进入 Reel，
-开发工具的控制操作仍由 Reel 解码。状态坐标使用 Respo 的 `CoordKey` union，
+开发工具的控制操作仍由 Reel 解码。移除闲置的开放事件解码器，回归测试直接使用页面派发的具名事件。状态坐标使用 Respo 的 `CoordKey` union，
 状态节点载荷继续接受异构数据。
 
 根组件构建与 render! 同处 managed memo frame。开发 Reel 直接使用 typed State，
@@ -31,7 +31,7 @@ DiffChunk、StoreData 和 `Map Tag String` site 配置沿用。存档入口接�
 
 ### 安装与原门禁
 
-使用 Calcit 0.37.0、Caps 0.1.1、Node.js 24、Yarn 4.18.0。
+使用 Calcit 0.38.0、Caps 0.1.1、Node.js 24、Yarn 4.18.0。
 Caps 独立安装，见 [官方说明](https://github.com/calcit-lang/caps)；Corepack/Yarn 不会安装它。
 新解析 npm 包保留 60 分钟年龄门禁，无单包例外。lock 只更新 procs 配对；已有
 undici Dependabot #48 单独保留。

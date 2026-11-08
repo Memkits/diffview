@@ -371,7 +371,6 @@
             :toggle-word
             :clear-text
             :swap-text
-            :unknown String
             :reel/toggle
             :reel/recall Number
             :reel/run
@@ -392,27 +391,6 @@
             :new-text String
           :examples $ []
           :schema $ quote StructDef
-        'decode-op $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn decode-op (raw)
-            match raw
-              (:states cursor data)
-                Op :states
-                  decode-map-as cursor $ List respo.schema/CoordKey
-                  , data
-              (:write-old text)
-                Op :write-old $ decode-map-as text String
-              (:write-new text)
-                Op :write-new $ decode-map-as text String
-              (:hydrate-storage data)
-                Op :hydrate-storage $ normalize-store data
-              (:toggle-sorted) (Op :toggle-sorted)
-              (:toggle-result) (Op :toggle-result)
-              (:toggle-word) (Op :toggle-word)
-              (:clear-text) (Op :clear-text)
-              (:swap-text) (Op :swap-text)
-              _ $ Op :unknown $ str raw
-          :examples $ []
-          :schema $ quote $ Fn AnyEnum (-> app.schema/Op)
         'normalize-store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn normalize-store (raw)
             decode-map-as
@@ -448,8 +426,6 @@
                 -> store
                   assoc :old-text $ :new-text store
                   assoc :new-text $ :old-text store
-              (:unknown raw)
-                do (eprintln "|Unknown op:" raw) store
               _ store
           :examples $ []
           :schema $ quote $ Fn app.schema/StoreData app.schema/Op String Number (-> app.schema/StoreData)
