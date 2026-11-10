@@ -33,13 +33,12 @@
                 sorted? $ :sorted? store
                 show-result? $ :show-result? store
                 by-word? $ :by-word? store
-                differ $ if by-word? diff/diffWords diff/diffLines
+                old-text $ :old-text store
+                new-text $ :new-text store
+                left $ if sorted? (sort-by-line old-text) old-text
+                right $ if sorted? (sort-by-line new-text) new-text
                 changes $ decode-map-as
-                  to-calcit-data $ if sorted?
-                    differ
-                      sort-by-line $ :old-text store
-                      sort-by-line $ :new-text store
-                    differ (:old-text store) (:new-text store)
+                  to-calcit-data $ if by-word? (diff/diffWords left right) (diff/diffLines left right)
                   List app.schema/DiffChunk
               div
                 {} $ :class-name $ str-spaced css/global css/fullscreen css/column
@@ -397,7 +396,7 @@
               if (struct? raw) (&struct:to-map raw) raw
               , 'app.schema/StoreData
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/StoreData)
+          :schema $ quote $ Fn Input (-> app.schema/StoreData) (:generics Input)
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
             StoreData :states ({}) :page :editor :sorted? false :show-result? false :by-word? false :old-text | :new-text |
