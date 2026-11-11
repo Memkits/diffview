@@ -81,11 +81,11 @@
                               , | $ decode-map-as value String
                         :spellcheck false
                 if dev?
-                  Option :some $ comp-typed-reel (>> states :reel) reel $ {}
-                  Option :none
+                  Some $ comp-typed-reel (>> states :reel) reel $ {}
+                  , None
                 if dev?
-                  Option :some $ comp-inspect |Store store $ {} (:bottom |0px)
-                  Option :none
+                  Some $ comp-inspect |Store store $ {} (:bottom |0px)
+                  , None
           :examples $ []
           :schema $ quote $ Fn (reel.typed/State app.schema/Op app.schema/StoreData) (-> respo.schema/Component) (:features :js-ffi)
         'comp-diff-view $ %{} 'CodeEntry (:doc |)
@@ -243,7 +243,7 @@
         '*reel $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *reel (typed-reel/new-reel schema/store)
           :examples $ []
-          :schema $ quote $ Ref (reel.typed/State app.schema/Op app.schema/StoreData)
+          :schema $ quote $ Ref (reel.typed/State schema/Op schema/StoreData)
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             when config/dev? $ js/console.log |Dispatch: op
@@ -254,7 +254,7 @@
                 reset! *reel $ typed-reel/record-op updater @*reel op (generate-id!) (host/now-ms)
             , &unit
           :examples $ []
-          :schema $ quote $ Fn app.schema/Op (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn schema/Op (-> Unit) (:features :js-ffi)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             if config/dev? $ load-console-formatter!
@@ -361,7 +361,7 @@
           :schema $ quote StructDef
         'Op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum Op
-            :states (List respo.schema/CoordKey) Dynamic
+            :states (List respo.schema/CoordKey) String
             :write-old String
             :write-new String
             :hydrate-storage app.schema/StoreData
@@ -396,12 +396,12 @@
               if (struct? raw) (&struct:to-map raw) raw
               , 'app.schema/StoreData
           :examples $ []
-          :schema $ quote $ Fn Input (-> app.schema/StoreData) (:generics Input)
+          :schema $ quote $ Fn Input (-> StoreData) (:generics Input)
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
             StoreData :states ({}) :page :editor :sorted? false :show-result? false :by-word? false :old-text | :new-text |
           :examples $ []
-          :schema $ quote app.schema/StoreData
+          :schema $ quote StoreData
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.schema
     'app.updater $ %{} 'FileEntry
@@ -427,7 +427,7 @@
                   assoc :new-text $ :old-text store
               _ store
           :examples $ []
-          :schema $ quote $ Fn app.schema/StoreData app.schema/Op String Number (-> app.schema/StoreData)
+          :schema $ quote $ Fn schema/StoreData schema/Op String Number (-> schema/StoreData)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater
           :require
