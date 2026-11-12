@@ -266,15 +266,15 @@
               (:none) &unit
             render-app!
             add-watch! *reel :changes $ fn (r p)
-              hint-fn $ Fn (reel.typed/State app.schema/Op app.schema/StoreData) (reel.typed/State app.schema/Op app.schema/StoreData) (-> Unit)
+              hint-fn $ Fn (reel.typed/State schema/Op schema/StoreData) (reel.typed/State schema/Op schema/StoreData) (-> Unit)
               render-app!
             listen-devtools-toggle! |a $ fn () $ dispatch! (app.schema/Op :reel/toggle)
             browser/add-event-listener! |beforeunload $ fn (event)
-              hint-fn $ Fn js-ffi.browser/EventHost $ -> Unit
+              hint-fn $ Fn browser/EventHost $ -> Unit
               persist-storage!
             repeat! 60 persist-storage!
             browser/add-event-listener! |keydown $ fn (event)
-              hint-fn $ Fn js-ffi.browser/EventHost (-> Unit) (:features :js-ffi)
+              hint-fn $ Fn browser/EventHost (-> Unit) (:features :js-ffi)
               let
                   host $ browser/keyboard-event-host event
                   key $ .-key host
@@ -311,7 +311,7 @@
             if (js-nullish? build-errors)
               do (remove-watch! *reel :changes) (clear-cache!)
                 add-watch! *reel :changes $ fn (reel prev)
-                  hint-fn $ Fn (reel.typed/State app.schema/Op app.schema/StoreData) (reel.typed/State app.schema/Op app.schema/StoreData) (-> Unit)
+                  hint-fn $ Fn (reel.typed/State schema/Op schema/StoreData) (reel.typed/State schema/Op schema/StoreData) (-> Unit)
                   render-app!
                 reset! *reel $ typed-reel/refresh updater @*reel schema/store
                 hud! |ok~ |Ok
