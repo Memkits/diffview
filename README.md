@@ -7,7 +7,7 @@ http://r.tiye.me/Memkits/diffview/
 
 ### 使用者影响
 
-CLI 与 `@calcit/procs` 配对升级到正式 **0.41.1**，需要重新安装完整模块图、
+CLI 与 `@calcit/procs` 配对升级到正式 **0.42.1**，需要重新安装完整模块图、
 生成 JS 并完整刷新，不能跨工具链热重载旧 Reel。依赖使用正式 Reel **0.10.0**、
 UI **0.15.2**、Respo **0.19.5**、JS-FFI **0.2.13**，传递 Router **0.12.2**。
 不使用 main/hash 或 alpha，不关闭 Caps strict 解决冲突。
@@ -31,7 +31,7 @@ DiffChunk、StoreData 和 `Map Tag String` site 配置沿用。存档入口接�
 
 ### 安装与原门禁
 
-使用 Calcit 0.41.1、Caps 0.1.1、Node.js 24、Yarn 4.18.0。
+使用 Calcit 0.42.1、Caps 0.1.1、Node.js 24、Yarn 4.18.0。
 Caps 独立安装，见 [官方说明](https://github.com/calcit-lang/caps)；Corepack/Yarn 不会安装它。
 新解析 npm 包保留 60 分钟年龄门禁，无单包例外。lock 只更新 procs 配对；已有
 undici Dependabot #48 单独保留。
