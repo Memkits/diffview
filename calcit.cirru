@@ -321,7 +321,8 @@
           :schema $ quote $ Fn (-> Unit) (:features :state)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
-            with-memo-frame $ fn () $ render! (mount-target) (comp-container @*reel) dispatch!
+            with-memo-frame $ fn () $ render! (mount-target) (comp-container @*reel)
+              fn (op) (dispatch! op)
           :examples $ []
           :schema $ quote $ Fn (-> Unit) (:features :state)
         'repeat! $ %{} 'CodeEntry (:doc |)
@@ -332,9 +333,9 @@
             , &unit
           :examples $ []
           :schema $ quote $ Fn Number
-            Fn $ -> Unit
+            Fn (-> Unit) (:features :state)
             -> Unit
-            :features :js-ffi
+            :features :js-ffi :state
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.main
           :require
