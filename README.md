@@ -43,6 +43,7 @@ caps verify --toolchain
 calcit --check-only --all-defs
 calcit fix --workflow strict --verify
 corepack yarn build
+calcit --init-fn respo.render.html/make-string --reload-fn respo.render.html/make-string js
 node --test scripts/upgrade.test.mjs
 ```
 
