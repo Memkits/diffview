@@ -1,7 +1,7 @@
 
-{} (:calcit-version |0.43.0)
+{} (:calcit-version |0.44.0)
   :version |0.1.5
-  :dependencies $ {} (|Respo/reel.calcit |0.10.0)
-    |Respo/respo-ui.calcit |0.15.2
-    |Respo/respo.calcit |0.19.5
-    |calcit-lang/js-ffi |0.2.13
+  :dependencies $ {} (|Respo/reel.calcit |0.11.3)
+    |Respo/respo-ui.calcit |0.15.5
+    |Respo/respo.calcit |0.19.11
+    |calcit-lang/js-ffi |0.2.18

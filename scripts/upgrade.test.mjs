@@ -17,7 +17,8 @@ const unwrap = clt.option_$o_unwrap;
 const read = (value, key) => unwrap(clt.get(value, key));
 const op = (name, ...args) => clt._PCT__$o__$o_(Op, init_tags([name])[name], ...args);
 const apply = (store, name, ...args) => updater(store, op(name, ...args), "test", 0);
-const render = (store) => comp_container(new_reel(store));
+const onControl = () => {};
+const render = (store) => comp_container(new_reel(store), onControl);
 
 function handlers(node, kind) {
   if (component_$q_(node)) return handlers(unwrap(component_tree(node)), kind);
@@ -38,7 +39,7 @@ test("npm diff chunks decode into typed Calcit data", () => {
   );
   const reel = new_reel(store);
 
-  assert.ok(comp_container(reel));
+  assert.ok(comp_container(reel, onControl));
 });
 
 test("line and word differences render added and removed content", () => {
