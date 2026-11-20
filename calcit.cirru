@@ -26,7 +26,7 @@
               -> Unit
             -> respo.schema/Component
         'comp-container $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defcomp comp-container (reel)
+          :code $ quote $ defcomp comp-container (reel on-control!)
             let
                 store $ :store reel
                 states $ :states store
@@ -81,13 +81,16 @@
                               , | $ decode-map-as value String
                         :spellcheck false
                 if dev?
-                  Some $ comp-typed-reel (>> states :reel) reel $ {}
+                  Some $ comp-typed-reel (>> states :reel) reel ({}) on-control!
                   , None
                 if dev?
                   Some $ comp-inspect |Store store $ {} (:bottom |0px)
                   , None
           :examples $ []
-          :schema $ quote $ Fn (reel.typed/State app.schema/Op app.schema/StoreData) (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn (reel.typed/State app.schema/Op app.schema/StoreData)
+            Fn reel.typed/Control (-> Unit) (:features :io :state)
+            -> respo.schema/Component
+            :features :js-ffi :state
         'comp-diff-view $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-diff-view (changes by-word?)
             list->
@@ -299,6 +302,12 @@
           :schema $ quote $ Fn
             -> $ JsNullish respo.dom/DomElement
             :features :js-ffi
+        'on-control! $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn on-control! (control)
+            reset! *reel $ typed-reel/apply-control updater @*reel control
+            , &unit
+          :examples $ []
+          :schema $ quote $ Fn reel.typed/Control (-> Unit) (:features :state)
         'persist-storage! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn persist-storage! ()
             browser/storage-set!
@@ -318,13 +327,13 @@
               hud! |error build-errors
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :state)
+          :schema $ quote $ Fn (-> Unit) (:features :io :state)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
-            with-memo-frame $ fn () $ render! (mount-target) (comp-container @*reel)
+            with-memo-frame $ fn () $ render! (mount-target) (comp-container @*reel on-control!)
               fn (op) (dispatch! op)
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :state)
+          :schema $ quote $ Fn (-> Unit) (:features :io :state)
         'repeat! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn repeat! (duration cb)
             browser/set-timeout!
