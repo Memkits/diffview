@@ -8,8 +8,8 @@ http://r.tiye.me/Memkits/diffview/
 ### 使用者影响
 
 CLI 与 `@calcit/procs` 配对升级到正式 **0.44.0**，需要重新安装完整模块图、
-生成 JS 并完整刷新，不能跨工具链热重载旧 Reel。依赖使用正式 Reel **0.11.3**、
-UI **0.15.5**、Respo **0.19.11**、JS-FFI **0.2.18**，传递 Router **0.12.9**。
+生成 JS 并完整刷新，不能跨工具链热重载旧 Reel。依赖使用正式 Reel **0.11.5**、
+UI **0.15.7**、Respo **0.19.13**、JS-FFI **0.2.19**，传递 Router **0.12.11**。
 不使用 main/hash 或 alpha，不关闭 Caps strict 解决冲突。
 
 行/词差异、Sorted、Swap、Clear、原 ⌘E/⌘I/⌘K、存储 key `diffview` 和 Map 存档
