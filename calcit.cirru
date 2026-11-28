@@ -250,11 +250,7 @@
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             when config/dev? $ js/console.log |Dispatch: op
-            match (typed-reel/decode-control op)
-              (:some control)
-                reset! *reel $ typed-reel/apply-control updater @*reel control
-              (:none)
-                reset! *reel $ typed-reel/record-op updater @*reel op (generate-id!) (host/now-ms)
+            reset! *reel $ typed-reel/record-op updater @*reel op (generate-id!) (host/now-ms)
             , &unit
           :examples $ []
           :schema $ quote $ Fn schema/Op (-> Unit) (:features :js-ffi :state)
@@ -271,7 +267,7 @@
             add-watch! *reel :changes $ fn (r p)
               hint-fn $ Fn (reel.typed/State schema/Op schema/StoreData) (reel.typed/State schema/Op schema/StoreData) (-> Unit)
               render-app!
-            listen-devtools-toggle! |a $ fn () $ dispatch! (app.schema/Op :reel/toggle)
+            listen-devtools-toggle! |a $ fn () $ on-control! (reel.typed/Control :toggle)
             browser/add-event-listener! |beforeunload $ fn (event)
               hint-fn $ Fn browser/EventHost $ -> Unit
               persist-storage!
@@ -380,13 +376,6 @@
             :toggle-word
             :clear-text
             :swap-text
-            :reel/toggle
-            :reel/recall Number
-            :reel/run
-            :reel/step
-            :reel/merge
-            :reel/reset
-            :reel/remove Number
           :examples $ []
           :schema $ quote EnumDef
         'StoreData $ %{} 'CodeEntry (:doc |)
